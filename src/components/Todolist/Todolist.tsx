@@ -5,13 +5,15 @@ import {Input} from "../Input/Input";
 import {Tasks} from "./Tasks/Tasks";
 
 type TodolistPropsType = {
+    todolistId: string
     title: string
     tasks: TaskType[]
-    removeTask: (id: string) => void
-    changeFilter: (value: FilterValuesType) => void
-    addTask: (title: string) => void
-    changeTaskStatus: (taskId: string, isDone: boolean) => void
+    removeTask: (id: string, todolistId: string) => void
+    changeFilter: (value: FilterValuesType, todolistId: string) => void
+    addTask: (title: string, todolistId: string) => void
+    changeTaskStatus: (taskId: string, isDone: boolean, todolistId: string) => void
     filter: FilterValuesType
+    removeTodolist:(todolistId:string)=>void
 }
 export const Todolist = (props: TodolistPropsType) => {
     const [newTaskTitle, setNewTaskTitle] = useState('')
@@ -19,16 +21,20 @@ export const Todolist = (props: TodolistPropsType) => {
 
     const addTask = () => {
         if (newTaskTitle.trim() !== '') {
-            props.addTask(newTaskTitle)
+            props.addTask(newTaskTitle, props.todolistId)
             setNewTaskTitle('')
         } else {
             setError('Title is required')
         }
     }
 
-    const onAllClickHandler = () => props.changeFilter('all')
-    const onActiveClickHandler = () => props.changeFilter('active')
-    const onCompletedClickHandler = () => props.changeFilter('completed')
+    const removeTodolist = () => {
+        props.removeTodolist(props.todolistId)
+    }
+
+    const onAllClickHandler = () => props.changeFilter('all', props.todolistId)
+    const onActiveClickHandler = () => props.changeFilter('active', props.todolistId)
+    const onCompletedClickHandler = () => props.changeFilter('completed', props.todolistId)
 
     const allStyle = props.filter == 'all' ? 'active-filter' : ''
     const activeStyle = props.filter == 'active' ? 'active-filter' : ''
@@ -36,7 +42,9 @@ export const Todolist = (props: TodolistPropsType) => {
 
     return (
         <div>
-            <h3>{props.title}</h3>
+            <h3> {props.title}
+                <button onClick={removeTodolist}>x</button>
+            </h3>
             <div>
                 <Input
                     setError={setError}
@@ -49,6 +57,7 @@ export const Todolist = (props: TodolistPropsType) => {
                 {error && <div className={'error-messaga'}>{error}</div>}
             </div>
             <Tasks
+                todolistId={props.todolistId}
                 tasks={props.tasks}
                 removeTask={props.removeTask}
                 changeTaskStatus={props.changeTaskStatus}
