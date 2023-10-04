@@ -4,13 +4,15 @@ type InputPropsType = {
     title: string
     setTitle: (title: string) => void
     addTask: () => void
-    error: string | null
-    setError: (error: string | null) => void
+    error?: string | null
+    setError?: (error: string | null) => void
 }
 export const Input = (props: InputPropsType) => {
 
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        props.setError(null)
+        if(props.setError){
+            props.setError(null)
+        }
         if (e.charCode == 13) {
             props.addTask()
         }
