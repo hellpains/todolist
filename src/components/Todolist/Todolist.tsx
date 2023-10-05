@@ -3,7 +3,8 @@ import React from "react";
 import {Tasks} from "./Tasks/Tasks";
 import {AddItemForm} from "../AddItemForm/AddItemForm";
 import {EditableSpan} from "../EditableSpan/EditableSpan";
-import {Simulate} from "react-dom/test-utils";
+import {Button, IconButton, Typography} from "@mui/material";
+import {DeleteForever} from "@mui/icons-material";
 
 
 type TodolistPropsType = {
@@ -34,9 +35,6 @@ export const Todolist = (props: TodolistPropsType) => {
     const onActiveClickHandler = () => props.changeFilter('active', props.todolistId)
     const onCompletedClickHandler = () => props.changeFilter('completed', props.todolistId)
 
-    const allStyle = props.filter == 'all' ? 'active-filter' : ''
-    const activeStyle = props.filter == 'active' ? 'active-filter' : ''
-    const completedStyle = props.filter == 'completed' ? 'active-filter' : ''
 
     const changeTodolistTitleHandler = (title: string) => {
         props.changeTodolistTitle(title, props.todolistId)
@@ -45,11 +43,15 @@ export const Todolist = (props: TodolistPropsType) => {
 
     return (
         <div>
-            <h3>
+            <Typography
+                variant={'h5'}
+                align={'center'}
+                gutterBottom
+                sx={{fontWeight:'bold'}}
+            >
                 <EditableSpan title={props.title} changeTitle={changeTodolistTitleHandler}/>
-
-                <button onClick={removeTodolist}>x</button>
-            </h3>
+                <IconButton onClick={removeTodolist}><DeleteForever/></IconButton>
+            </Typography>
             <AddItemForm addItem={addTaskHandler}/>
             <Tasks
                 changeTaskTitle={props.changeTaskTitle}
@@ -58,10 +60,34 @@ export const Todolist = (props: TodolistPropsType) => {
                 removeTask={props.removeTask}
                 changeTaskStatus={props.changeTaskStatus}
             />
-            <div>
-                <button className={allStyle} onClick={onAllClickHandler}>All</button>
-                <button className={activeStyle} onClick={onActiveClickHandler}>Active</button>
-                <button className={completedStyle} onClick={onCompletedClickHandler}>Completed</button>
+            <div style={{display:"flex",justifyContent:'center',gap:'5'}}>
+                <Button
+                    sx={{marginRight:'5px',flexGrow:1}}
+                    size={"small"}
+                    color={props.filter === 'all' ? 'secondary' : 'primary'}
+                    variant={props.filter === 'all' ? 'contained' : 'outlined'}
+                    onClick={onAllClickHandler}
+                >
+                    All
+                </Button>
+                <Button
+                    sx={{flexGrow:1}}
+                    size={"small"}
+                    color={props.filter === 'active' ? 'secondary' : 'error'}
+                    variant={props.filter === 'active' ? 'contained' : 'outlined'}
+                    onClick={onActiveClickHandler}
+                >
+                    Active
+                </Button>
+                <Button
+                    sx={{marginLeft:'5px',flexGrow:1}}
+                    size={"small"}
+                    color={props.filter === 'completed' ? 'secondary' : 'success'}
+                    variant={props.filter === 'completed' ? 'contained' : 'outlined'}
+                    onClick={onCompletedClickHandler}
+                >
+                    Completed
+                </Button>
             </div>
         </div>
     );

@@ -1,6 +1,8 @@
 import React, {ChangeEvent} from 'react';
 import {TaskType} from "../../../App";
 import {EditableSpan} from "../../EditableSpan/EditableSpan";
+import {Checkbox, IconButton, List, ListItem} from "@mui/material";
+import {DeleteForever} from "@mui/icons-material";
 
 type TasksPropsType = {
     changeTaskTitle: (title: string, taskId: string, todolistId: string) => void
@@ -13,7 +15,7 @@ export const Tasks = (props: TasksPropsType) => {
 
 
     return (
-        <ul>
+        <List >
             {props.tasks.map(task => {
                 const onChangeTaskTitleHandler = (title: string) => {
                     props.changeTaskTitle(title, task.id, props.todolistId)
@@ -25,21 +27,21 @@ export const Tasks = (props: TasksPropsType) => {
                     props.changeTaskStatus(task.id, e.currentTarget.checked, props.todolistId)
                 }
 
-
                 return (
-                    <li key={task.id} className={task.isDone ? 'is-done' : ''}>
-                        <input
-                            type="checkbox"
+                    <ListItem divider disablePadding key={task.id} className={task.isDone ? 'is-done' : ''}>
+                        <Checkbox
                             onChange={onChangeStatusHandler}
                             checked={task.isDone}
                         />
                         <EditableSpan title={task.title} changeTitle={onChangeTaskTitleHandler}/>
-                        <button onClick={onRemoveHandler}>x</button>
+                        <IconButton onClick={onRemoveHandler}>
+                            <DeleteForever/>
+                        </IconButton>
 
-                    </li>
+                    </ListItem>
                 )
             })}
-        </ul>
+        </List>
     );
 };
 
