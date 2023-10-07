@@ -30,7 +30,7 @@ export type TaskType = {
     title: string
     isDone: boolean
 }
-type TasksForTodolistType = {
+export type TasksForTodolistType = {
     [key: string]: TaskType[]
 }
 
@@ -60,18 +60,12 @@ function App() {
 
     const [lightMode, setLightMode] = useState(true)
 
-    // CRUD
-    const removeTask = (id: string, todolistId: string) => {
-        setTasks({...tasks, [todolistId]: tasks[todolistId].filter(task => task.id !== id)})
-    }
+    // CRUD tasks
     const addTask = (title: string, todolistId: string) => {
         setTasks({...tasks, [todolistId]: [{id: v1(), title, isDone: false}, ...tasks[todolistId]]})
     }
-    const addTodolist = (title: string) => {
-        const id = v1()
-        setTodolists([{id, title, filter: 'all'}, ...todolists])
-        setTasks({...tasks, [id]: []})
-
+    const removeTask = (id: string, todolistId: string) => {
+        setTasks({...tasks, [todolistId]: tasks[todolistId].filter(task => task.id !== id)})
     }
     const changeTaskStatus = (taskId: string, isDone: boolean, todolistId: string) => {
         setTasks({
@@ -81,6 +75,14 @@ function App() {
     }
     const changeTaskTitle = (title: string, taskId: string, todolistId: string) => {
         setTasks({...tasks, [todolistId]: tasks[todolistId].map(t => t.id == taskId ? {...t, title} : t)})
+    }
+
+    // CRUD todolists
+    const addTodolist = (title: string) => {
+        const id = v1()
+        setTodolists([{id, title, filter: 'all'}, ...todolists])
+        setTasks({...tasks, [id]: []})
+
     }
     const changeTodolistTitle = (title: string, todolistId: string) => {
         setTodolists(todolists.map(tl => tl.id === todolistId ? {...tl, title} : tl))
