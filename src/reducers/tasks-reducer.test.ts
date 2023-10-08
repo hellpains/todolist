@@ -1,9 +1,10 @@
 import {TasksForTodolistType, TodolistType} from "../App";
 import {v1} from "uuid";
-import {AddTaskAC, RemoveTaskAC, tasksReducer, ChangeTitleAC, ChangeStatusAC} from "./tasks-reducer";
+import {addTaskAC, removeTaskAC, tasksReducer, changeTitleAC, changeStatusAC} from "./tasks-reducer";
+import {addTodolistAC} from "./todolists-reducer";
 
 
-test('should be remove correct task', () => {
+test('correct task should be deleted from correct array', () => {
     let todolistId1 = v1()
     let todolistId2 = v1()
     let taskId1 = v1()
@@ -21,7 +22,7 @@ test('should be remove correct task', () => {
         ],
     }
 
-    let result = tasksReducer(startState, RemoveTaskAC(taskId1, todolistId1))
+    let result = tasksReducer(startState, removeTaskAC(taskId1, todolistId1))
 
 
     expect(result[todolistId1].length).toBe(3)
@@ -45,7 +46,7 @@ test('should be add correct task', () => {
         ],
     }
 
-    let result = tasksReducer(startState, AddTaskAC('newTask', todolistId1))
+    let result = tasksReducer(startState, addTaskAC('newTask', todolistId1))
 
 
     expect(result[todolistId1].length).toBe(5)
@@ -70,7 +71,7 @@ test('should be changed title correct task', () => {
         ],
     }
 
-    let result = tasksReducer(startState, ChangeTitleAC('updatedTitle', taskId,todolistId1))
+    let result = tasksReducer(startState, changeTitleAC('updatedTitle', taskId, todolistId1))
 
 
     expect(result[todolistId1].length).toBe(4)
@@ -95,9 +96,38 @@ test('should be changed status correct task', () => {
         ],
     }
 
-    let result = tasksReducer(startState, ChangeStatusAC(taskId, false,todolistId1))
+    let result = tasksReducer(startState, changeStatusAC(taskId, false, todolistId1))
 
 
     expect(result[todolistId1].length).toBe(4)
     expect(result[todolistId1][1].isDone).toBe(false)
+})
+
+test('new array should be added when new todolist is added', () => {
+    const startState: TasksForTodolistType = {
+        ['todolistId1']: [
+            {id: '1', title: 'HTML&CSS', isDone: true},
+            {id: '2', title: 'CSS', isDone: true},
+            {id: '3', title: 'JS', isDone: false},
+            {id: '4', title: 'React', isDone: false},
+        ],
+        ['todolistId2']: [
+            {id: '1', title: 'Milk', isDone: true},
+            {id: '2', title: 'Salt', isDone: true},
+            {id: '3', title: 'Sugar', isDone: false},
+        ],
+    }
+
+    const result = tasksReducer(startState, addTodolistAC('newTodolist'))
+    const keys = Object.keys(result)
+    const newKey = keys.find(k => k !== 'todolistId1' && k !== 'todolistId2')
+    if (!newKey) {
+        throw Error('new key should be added')
+    }
+
+    expect(keys.length).toBe(3)
+
+    expect(result[newKey]).toEqual([])
+
+
 })
