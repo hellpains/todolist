@@ -1,6 +1,6 @@
 import {TasksForTodolistType, TodolistType} from "../App";
 import {v1} from "uuid";
-import {addTaskAC, removeTaskAC, tasksReducer, changeTitleAC, changeStatusAC} from "./tasks-reducer";
+import {addTaskAC, removeTaskAC, tasksReducer, changeTaskTitleAC, changeTaskStatusAC} from "./tasks-reducer";
 import {addTodolistAC} from "./todolists-reducer";
 
 
@@ -71,7 +71,7 @@ test('should be changed title correct task', () => {
         ],
     }
 
-    let result = tasksReducer(startState, changeTitleAC('updatedTitle', taskId, todolistId1))
+    let result = tasksReducer(startState, changeTaskTitleAC('updatedTitle', taskId, todolistId1))
 
 
     expect(result[todolistId1].length).toBe(4)
@@ -96,7 +96,7 @@ test('should be changed status correct task', () => {
         ],
     }
 
-    let result = tasksReducer(startState, changeStatusAC(taskId, false, todolistId1))
+    let result = tasksReducer(startState, changeTaskStatusAC(taskId, false, todolistId1))
 
 
     expect(result[todolistId1].length).toBe(4)
@@ -117,8 +117,8 @@ test('new array should be added when new todolist is added', () => {
             {id: '3', title: 'Sugar', isDone: false},
         ],
     }
-
-    const result = tasksReducer(startState, addTodolistAC('newTodolist'))
+    const todolistId=v1()
+    const result = tasksReducer(startState, addTodolistAC('newTodolist',todolistId))
     const keys = Object.keys(result)
     const newKey = keys.find(k => k !== 'todolistId1' && k !== 'todolistId2')
     if (!newKey) {

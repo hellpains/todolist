@@ -1,45 +1,35 @@
-import {FilterValuesType, TaskType} from "../../App";
+import {FilterValuesType, TodolistType} from "../../App";
 import React from "react";
 import {Tasks} from "./Tasks/Tasks";
 import {AddItemForm} from "../AddItemForm/AddItemForm";
 import {EditableSpan} from "../EditableSpan/EditableSpan";
 import {Button, IconButton, Typography} from "@mui/material";
 import {DeleteForever} from "@mui/icons-material";
-
+import {useDispatch} from "react-redux";
+import {addTaskAC} from "../../redux/tasks-reducer";
+import {changeTodolistFilterAC, changeTodolistTitleAC, removeTodolistAC} from "../../redux/todolists-reducer";
 
 type TodolistPropsType = {
-    changeTodolistTitle: (title: string, todolistId: string) => void
-    changeTaskTitle: (title: string, taskId: string, todolistId: string) => void
+    todolist:TodolistType
     todolistId: string
     title: string
-    tasks: TaskType[]
-    removeTask: (id: string, todolistId: string) => void
-    changeFilter: (value: FilterValuesType, todolistId: string) => void
-    addTask: (title: string, todolistId: string) => void
-    changeTaskStatus: (taskId: string, isDone: boolean, todolistId: string) => void
     filter: FilterValuesType
-    removeTodolist: (todolistId: string) => void
 }
 export const Todolist = (props: TodolistPropsType) => {
+    const dispatch = useDispatch()
 
     const removeTodolist = () => {
-        props.removeTodolist(props.todolistId)
+        dispatch(removeTodolistAC(props.todolistId))
     }
-
-    const addTaskHandler = (title: string) => {
-        props.addTask(title, props.todolistId)
-    }
-
-
-    const onAllClickHandler = () => props.changeFilter('all', props.todolistId)
-    const onActiveClickHandler = () => props.changeFilter('active', props.todolistId)
-    const onCompletedClickHandler = () => props.changeFilter('completed', props.todolistId)
-
 
     const changeTodolistTitleHandler = (title: string) => {
-        props.changeTodolistTitle(title, props.todolistId)
+        dispatch(changeTodolistTitleAC(title, props.todolistId))
     }
 
+
+    const onAllClickHandler = () => dispatch(changeTodolistFilterAC('all', props.todolistId))
+    const onActiveClickHandler = () => dispatch(changeTodolistFilterAC('active', props.todolistId))
+    const onCompletedClickHandler = () => dispatch(changeTodolistFilterAC('completed', props.todolistId))
 
     return (
         <div>
@@ -47,22 +37,16 @@ export const Todolist = (props: TodolistPropsType) => {
                 variant={'h5'}
                 align={'center'}
                 gutterBottom
-                sx={{fontWeight:'bold'}}
+                sx={{fontWeight: 'bold'}}
             >
                 <EditableSpan title={props.title} changeTitle={changeTodolistTitleHandler}/>
                 <IconButton onClick={removeTodolist}><DeleteForever/></IconButton>
             </Typography>
-            <AddItemForm addItem={addTaskHandler}/>
-            <Tasks
-                changeTaskTitle={props.changeTaskTitle}
-                todolistId={props.todolistId}
-                tasks={props.tasks}
-                removeTask={props.removeTask}
-                changeTaskStatus={props.changeTaskStatus}
-            />
-            <div style={{display:"flex",justifyContent:'center',gap:'5'}}>
+            <AddItemForm addItem={(title: string) => dispatch(addTaskAC(title, props.todolistId))}/>
+            <Tasks todolistId={props.todolistId} filter={props.filter}/>
+            <div style={{display: "flex", justifyContent: 'center', gap: '5'}}>
                 <Button
-                    sx={{marginRight:'5px',flexGrow:1}}
+                    sx={{marginRight: '5px', flexGrow: 1}}
                     size={"small"}
                     color={props.filter === 'all' ? 'secondary' : 'primary'}
                     variant={props.filter === 'all' ? 'contained' : 'outlined'}
@@ -71,7 +55,7 @@ export const Todolist = (props: TodolistPropsType) => {
                     All
                 </Button>
                 <Button
-                    sx={{flexGrow:1}}
+                    sx={{flexGrow: 1}}
                     size={"small"}
                     color={props.filter === 'active' ? 'secondary' : 'error'}
                     variant={props.filter === 'active' ? 'contained' : 'outlined'}
@@ -80,7 +64,7 @@ export const Todolist = (props: TodolistPropsType) => {
                     Active
                 </Button>
                 <Button
-                    sx={{marginLeft:'5px',flexGrow:1}}
+                    sx={{marginLeft: '5px', flexGrow: 1}}
                     size={"small"}
                     color={props.filter === 'completed' ? 'secondary' : 'success'}
                     variant={props.filter === 'completed' ? 'contained' : 'outlined'}

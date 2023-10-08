@@ -21,6 +21,7 @@ export const EditableSpan = (props: EditableSpanPropsType) => {
         setNewTitle(e.currentTarget.value)
     }
 
+
     return editMode
         ? <TextField
             variant="standard"
