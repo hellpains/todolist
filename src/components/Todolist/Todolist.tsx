@@ -21,7 +21,6 @@ type TodolistPropsType = {
     removeTodolist: (todolistId: string) => void
 }
 export const Todolist = React.memo((props: TodolistPropsType) => {
-    console.log('Todolist')
     const removeTodolist = () => {
         props.removeTodolist(props.todolistId)
     }

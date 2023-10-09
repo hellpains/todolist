@@ -11,9 +11,6 @@ type TasksPropsType = {
     changeTaskStatus: (taskId: string, isDone: boolean, todolistId: string) => void
 }
 export const Tasks = React.memo((props: TasksPropsType) => {
-    // console.log('Tasks')
-
-
     return (
         <List>
             {props.tasks.map(task => {
