@@ -1,89 +1,35 @@
-import React, {ChangeEvent} from 'react';
-import {EditableSpan} from "../../EditableSpan/EditableSpan";
-import {Checkbox, IconButton, List, ListItem} from "@mui/material";
-import {DeleteForever} from "@mui/icons-material";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootState} from "../../../redux/store";
-import {changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "../../../redux/tasks-reducer";
-import {FilterValuesType, TaskType} from "../../../App";
+import React from 'react';
+import {TaskType} from "../../../App";
+import {List} from "@mui/material";
+import {Task} from "./Task/Task";
 
 type TasksPropsType = {
+    changeTaskTitle: (title: string, taskId: string, todolistId: string) => void
     todolistId: string
-    filter: FilterValuesType
+    tasks: TaskType[]
+    removeTask: (id: string, todolistId: string) => void
+    changeTaskStatus: (taskId: string, isDone: boolean, todolistId: string) => void
 }
-export const Tasks = (props: TasksPropsType) => {
-    const dispatch = useDispatch()
-    const tasks = useSelector<AppRootState, TaskType[]>(state => state.tasks[props.todolistId])
-
-    let allTodolistTasks = tasks
-    let tasksForTodolist = allTodolistTasks
-    if (props.filter === 'active') {
-        tasksForTodolist = allTodolistTasks.filter(t => !t.isDone)
-    }
-    if (props.filter === 'completed') {
-        tasksForTodolist = allTodolistTasks.filter(t => t.isDone)
-    }
+export const Tasks = React.memo((props: TasksPropsType) => {
+    // console.log('Tasks')
 
 
     return (
         <List>
-            {tasksForTodolist.map(task => {
-                const changeTaskTitleHandler = (title: string) => {
-                    dispatch(changeTaskTitleAC(title, task.id, props.todolistId))
-                }
-                const removeTaskHandler = () => {
-                    dispatch(removeTaskAC(task.id, props.todolistId))
-
-                }
-                const changeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
-                    dispatch(changeTaskStatusAC(task.id, e.currentTarget.checked, props.todolistId))
-                }
-
+            {props.tasks.map(task => {
                 return (
-                    <ListItem divider disablePadding key={task.id} className={task.isDone ? 'is-done' : ''}>
-                        <Checkbox
-                            onChange={changeStatusHandler}
-                            checked={task.isDone}
-                        />
-                        <EditableSpan title={task.title} changeTitle={changeTaskTitleHandler}/>
-                        <IconButton onClick={removeTaskHandler}>
-                            <DeleteForever/>
-                        </IconButton>
-
-                    </ListItem>
+                    <Task
+                        key={task.id}
+                        changeTaskTitle={props.changeTaskTitle}
+                        changeTaskStatus={props.changeTaskStatus}
+                        todolistId={props.todolistId}
+                        removeTask={props.removeTask}
+                        task={task}
+                    />
                 )
             })}
         </List>
     );
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+});
 
 

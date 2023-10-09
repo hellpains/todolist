@@ -1,35 +1,61 @@
-import {FilterValuesType, TodolistType} from "../../App";
-import React from "react";
+import {FilterValuesType, TaskType} from "../../App";
+import React, {useCallback} from "react";
 import {Tasks} from "./Tasks/Tasks";
 import {AddItemForm} from "../AddItemForm/AddItemForm";
 import {EditableSpan} from "../EditableSpan/EditableSpan";
 import {Button, IconButton, Typography} from "@mui/material";
 import {DeleteForever} from "@mui/icons-material";
-import {useDispatch} from "react-redux";
-import {addTaskAC} from "../../redux/tasks-reducer";
-import {changeTodolistFilterAC, changeTodolistTitleAC, removeTodolistAC} from "../../redux/todolists-reducer";
+
 
 type TodolistPropsType = {
-    todolist:TodolistType
+    changeTodolistTitle: (title: string, todolistId: string) => void
+    changeTaskTitle: (title: string, taskId: string, todolistId: string) => void
     todolistId: string
     title: string
+    tasks: TaskType[]
+    removeTask: (id: string, todolistId: string) => void
+    changeFilter: (value: FilterValuesType, todolistId: string) => void
+    addTask: (title: string, todolistId: string) => void
+    changeTaskStatus: (taskId: string, isDone: boolean, todolistId: string) => void
     filter: FilterValuesType
+    removeTodolist: (todolistId: string) => void
 }
-export const Todolist = (props: TodolistPropsType) => {
-    const dispatch = useDispatch()
-
+export const Todolist = React.memo((props: TodolistPropsType) => {
+    console.log('Todolist')
     const removeTodolist = () => {
-        dispatch(removeTodolistAC(props.todolistId))
+        props.removeTodolist(props.todolistId)
     }
 
-    const changeTodolistTitleHandler = (title: string) => {
-        dispatch(changeTodolistTitleAC(title, props.todolistId))
+    const addTask = useCallback((title: string) => {
+        props.addTask(title, props.todolistId)
+    }, [props.addTask, props.todolistId])
+
+
+    const onAllClickHandler = useCallback(() => {
+        props.changeFilter('all', props.todolistId)
+    }, [props.todolistId,props.filter])
+
+    const onActiveClickHandler = useCallback(() => {
+        props.changeFilter('active', props.todolistId)
+    }, [props.todolistId,props.filter])
+
+    const onCompletedClickHandler = useCallback(() => {
+        props.changeFilter('completed', props.todolistId)
+    }, [props.todolistId,props.filter])
+
+
+    const changeTodolistTitleHandler = useCallback((title: string) => {
+        props.changeTodolistTitle(title, props.todolistId)
+    }, [props.todolistId,props.changeTodolistTitle])
+
+    let tasksForTodolist = props.tasks
+    if (props.filter === 'completed') {
+        tasksForTodolist = props.tasks.filter(task => task.isDone)
+    }
+    if (props.filter === 'active') {
+        tasksForTodolist = props.tasks.filter(task => !task.isDone)
     }
 
-
-    const onAllClickHandler = () => dispatch(changeTodolistFilterAC('all', props.todolistId))
-    const onActiveClickHandler = () => dispatch(changeTodolistFilterAC('active', props.todolistId))
-    const onCompletedClickHandler = () => dispatch(changeTodolistFilterAC('completed', props.todolistId))
 
     return (
         <div>
@@ -42,8 +68,14 @@ export const Todolist = (props: TodolistPropsType) => {
                 <EditableSpan title={props.title} changeTitle={changeTodolistTitleHandler}/>
                 <IconButton onClick={removeTodolist}><DeleteForever/></IconButton>
             </Typography>
-            <AddItemForm addItem={(title: string) => dispatch(addTaskAC(title, props.todolistId))}/>
-            <Tasks todolistId={props.todolistId} filter={props.filter}/>
+            <AddItemForm addItem={addTask}/>
+            <Tasks
+                changeTaskTitle={props.changeTaskTitle}
+                todolistId={props.todolistId}
+                tasks={tasksForTodolist}
+                removeTask={props.removeTask}
+                changeTaskStatus={props.changeTaskStatus}
+            />
             <div style={{display: "flex", justifyContent: 'center', gap: '5'}}>
                 <Button
                     sx={{marginRight: '5px', flexGrow: 1}}
@@ -75,29 +107,4 @@ export const Todolist = (props: TodolistPropsType) => {
             </div>
         </div>
     );
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+});

@@ -1,12 +1,13 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
-import {Button, IconButton, TextField} from "@mui/material";
+import {Button, TextField} from "@mui/material";
 import {AddCircleOutlineOutlined} from "@mui/icons-material";
 
 
 type AddItemFormPropsType = {
     addItem: (title: string) => void
 }
-export const AddItemForm = (props: AddItemFormPropsType) => {
+export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
+    // console.log('AddItemForm')
     const [newTaskTitle, setNewTaskTitle] = useState('')
     const [error, setError] = useState<string | null>(null)
 
@@ -52,4 +53,4 @@ export const AddItemForm = (props: AddItemFormPropsType) => {
             </Button>
         </div>
     )
-}
+})
