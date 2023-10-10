@@ -1,4 +1,4 @@
-import {FilterValuesType, TaskType} from "../../App";
+import {FilterValuesType, TaskType} from "../../App/App";
 import React, {useCallback} from "react";
 import {Tasks} from "./Tasks/Tasks";
 import {AddItemForm} from "../AddItemForm/AddItemForm";
@@ -21,6 +21,8 @@ type TodolistPropsType = {
     removeTodolist: (todolistId: string) => void
 }
 export const Todolist = React.memo((props: TodolistPropsType) => {
+
+
     const removeTodolist = () => {
         props.removeTodolist(props.todolistId)
     }

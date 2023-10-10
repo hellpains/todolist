@@ -1,4 +1,4 @@
-import {FilterValuesType, TodolistType} from "../App";
+import {FilterValuesType, TodolistType} from "../App/App";
 
 export enum TODOLISTS_ACTIONS_TYPE  {
     REMOVE_TODOLIST= "REMOVE_TODOLIST",

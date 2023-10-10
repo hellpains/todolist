@@ -1,5 +1,5 @@
 import React from 'react';
-import {TaskType} from "../../../App";
+import {TaskType} from "../../../App/App";
 import {List} from "@mui/material";
 import {Task} from "./Task/Task";
 

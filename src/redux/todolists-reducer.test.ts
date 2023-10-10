@@ -1,4 +1,4 @@
-import {TodolistType} from "../App";
+import {TodolistType} from "../App/App";
 import {v1} from "uuid";
 import {
     addTodolistAC,
