@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "../../redux/store";
-import {useCallback} from "react";
+import {useCallback, useEffect} from "react";
 import {
     addTodolistAC,
     changeTodolistFilterAC,
@@ -10,11 +10,15 @@ import {
 import {v1} from "uuid";
 import {FilterValuesType, TasksForTodolistType, TodolistType} from "../App";
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "../../redux/tasks-reducer";
+import {todolistsAPI} from "../../api/todolists-api";
 
 export const useApp = () => {
     const dispatch = useDispatch()
     const todolists = useSelector<AppRootState, TodolistType[]>(state => state.todolists)
     const tasks = useSelector<AppRootState, TasksForTodolistType>(state => state.tasks)
+
+
+
 
     const addTodolist = useCallback((title: string) => {
         dispatch(addTodolistAC(title, v1()))
