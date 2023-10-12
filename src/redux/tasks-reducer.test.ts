@@ -1,4 +1,4 @@
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, setTasksAC, tasksReducer} from "./tasks-reducer"
+import {addTaskAC, updateTaskAC,  removeTaskAC, setTasksAC, tasksReducer} from "./tasks-reducer"
 import {addTodolistAC, setTodolistsAC} from "./todolists-reducer"
 import {TaskStatuses, TaskType} from "../api/todolists-api";
 import {v1} from "uuid";
@@ -201,7 +201,11 @@ test('should be add correct task', () => {
         ],
     }
 
-    let result = tasksReducer(startState, addTaskAC('newTask', todolistId1))
+    let result = tasksReducer(startState, addTaskAC({
+        id: 'taskId', todoListId: todolistId1, status: 0,
+        description: '', addedDate: '', deadline: '',
+        order: 0, title: 'newTask', startDate: '', priority: 0
+    }))
 
 
     expect(result[todolistId1].length).toBe(5)
@@ -303,7 +307,7 @@ test('should be changed title correct task', () => {
         ],
     }
 
-    let result = tasksReducer(startState, changeTaskTitleAC('updatedTitle', taskId, todolistId1))
+    let result = tasksReducer(startState, updateTaskAC(todolistId1, taskId, {title:'updatedTitle'}))
 
 
     expect(result[todolistId1].length).toBe(4)
@@ -405,7 +409,20 @@ test('should be changed status correct task', () => {
         ],
     }
 
-    let result = tasksReducer(startState, changeTaskStatusAC(taskId, TaskStatuses.New, todolistId1))
+    const model: TaskType = {
+        description: '',
+        status: TaskStatuses.New,
+        title: '',
+        priority: 0,
+        startDate: '',
+        order: 0,
+        deadline: '',
+        id: taskId,
+        addedDate: '',
+        todoListId: todolistId2
+    }
+
+    let result = tasksReducer(startState, updateTaskAC(todolistId1, taskId,model))
 
 
     expect(result[todolistId1].length).toBe(4)
@@ -505,7 +522,9 @@ test('new array should be added when new todolist is added', () => {
         ],
     }
     const todolistId = v1()
-    const result = tasksReducer(startState, addTodolistAC('newTodolist', todolistId))
+    const result = tasksReducer(startState, addTodolistAC({
+        id:todolistId,title:'hello',addedDate:'',order:0
+    }))
     const keys = Object.keys(result)
     const newKey = keys.find(k => k !== 'todolistId1' && k !== 'todolistId2')
     if (!newKey) {
@@ -546,10 +565,9 @@ test('tasks should be added for todolist', () => {
     }], 'todolistId1')
 
     const result = tasksReducer({
-        'todolistId2':[],
-        'todolistId1':[]
+        'todolistId2': [],
+        'todolistId1': []
     }, action)
-
 
 
     expect(result['todolistId1'.length]).toBe(1)
