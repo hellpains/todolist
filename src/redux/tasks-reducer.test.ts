@@ -1,7 +1,8 @@
-import {TasksForTodolistType, TodolistType} from "../App/App";
+import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, setTasksAC, tasksReducer} from "./tasks-reducer"
+import {addTodolistAC, setTodolistsAC} from "./todolists-reducer"
+import {TaskStatuses, TaskType} from "../api/todolists-api";
 import {v1} from "uuid";
-import {addTaskAC, removeTaskAC, tasksReducer, changeTaskTitleAC, changeTaskStatusAC} from "./tasks-reducer";
-import {addTodolistAC} from "./todolists-reducer";
+import {TasksForTodolistType} from "../App/App";
 
 
 test('correct task should be deleted from correct array', () => {
@@ -10,15 +11,92 @@ test('correct task should be deleted from correct array', () => {
     let taskId1 = v1()
     const startState: TasksForTodolistType = {
         [todolistId1]: [
-            {id: v1(), title: 'HTML&CSS', isDone: true},
-            {id: taskId1, title: 'CSS', isDone: true},
-            {id: v1(), title: 'JS', isDone: false},
-            {id: v1(), title: 'React', isDone: false},
+            {
+                id: v1(),
+                title: 'HTML&CSS',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId1
+            },
+            {
+                id: v1(),
+                title: 'CSS',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId1
+            },
+            {
+                id: v1(),
+                title: 'Js',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId1
+            },
+            {
+                id: v1(),
+                title: 'Js',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId1
+            },
         ],
         [todolistId2]: [
-            {id: v1(), title: 'Milk', isDone: true},
-            {id: v1(), title: 'Salt', isDone: true},
-            {id: v1(), title: 'Sugar', isDone: false},
+            {
+                id: v1(),
+                title: 'Milk',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId2
+            },
+            {
+                id: v1(),
+                title: 'Salt',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId2
+            },
+            {
+                id: v1(),
+                title: 'Sugar',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId2
+            },
         ],
     }
 
@@ -34,15 +112,92 @@ test('should be add correct task', () => {
     let todolistId2 = v1()
     const startState: TasksForTodolistType = {
         [todolistId1]: [
-            {id: v1(), title: 'HTML&CSS', isDone: true},
-            {id: v1(), title: 'CSS', isDone: true},
-            {id: v1(), title: 'JS', isDone: false},
-            {id: v1(), title: 'React', isDone: false},
+            {
+                id: v1(),
+                title: 'HTML&CSS',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId1
+            },
+            {
+                id: v1(),
+                title: 'CSS',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId1
+            },
+            {
+                id: v1(),
+                title: 'Js',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId1
+            },
+            {
+                id: v1(),
+                title: 'Js',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId1
+            },
         ],
         [todolistId2]: [
-            {id: v1(), title: 'Milk', isDone: true},
-            {id: v1(), title: 'Salt', isDone: true},
-            {id: v1(), title: 'Sugar', isDone: false},
+            {
+                id: v1(),
+                title: 'Milk',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId2
+            },
+            {
+                id: v1(),
+                title: 'Salt',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId2
+            },
+            {
+                id: v1(),
+                title: 'Sugar',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId2
+            },
         ],
     }
 
@@ -59,15 +214,92 @@ test('should be changed title correct task', () => {
     let taskId = v1()
     const startState: TasksForTodolistType = {
         [todolistId1]: [
-            {id: v1(), title: 'HTML&CSS', isDone: true},
-            {id: taskId, title: 'CSS', isDone: true},
-            {id: v1(), title: 'JS', isDone: false},
-            {id: v1(), title: 'React', isDone: false},
+            {
+                id: v1(),
+                title: 'HTML&CSS',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId1
+            },
+            {
+                id: v1(),
+                title: 'CSS',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId1
+            },
+            {
+                id: v1(),
+                title: 'Js',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId1
+            },
+            {
+                id: v1(),
+                title: 'Js',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId1
+            },
         ],
         [todolistId2]: [
-            {id: v1(), title: 'Milk', isDone: true},
-            {id: v1(), title: 'Salt', isDone: true},
-            {id: v1(), title: 'Sugar', isDone: false},
+            {
+                id: v1(),
+                title: 'Milk',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId2
+            },
+            {
+                id: v1(),
+                title: 'Salt',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId2
+            },
+            {
+                id: v1(),
+                title: 'Sugar',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId2
+            },
         ],
     }
 
@@ -84,41 +316,196 @@ test('should be changed status correct task', () => {
     let taskId = v1()
     const startState: TasksForTodolistType = {
         [todolistId1]: [
-            {id: v1(), title: 'HTML&CSS', isDone: true},
-            {id: taskId, title: 'CSS', isDone: true},
-            {id: v1(), title: 'JS', isDone: false},
-            {id: v1(), title: 'React', isDone: false},
+            {
+                id: v1(),
+                title: 'HTML&CSS',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId1
+            },
+            {
+                id: v1(),
+                title: 'CSS',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId1
+            },
+            {
+                id: v1(),
+                title: 'Js',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId1
+            },
+            {
+                id: v1(),
+                title: 'Js',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId1
+            },
         ],
         [todolistId2]: [
-            {id: v1(), title: 'Milk', isDone: true},
-            {id: v1(), title: 'Salt', isDone: true},
-            {id: v1(), title: 'Sugar', isDone: false},
+            {
+                id: v1(),
+                title: 'Milk',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId2
+            },
+            {
+                id: v1(),
+                title: 'Salt',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId2
+            },
+            {
+                id: v1(),
+                title: 'Sugar',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: todolistId2
+            },
         ],
     }
 
-    let result = tasksReducer(startState, changeTaskStatusAC(taskId, false, todolistId1))
+    let result = tasksReducer(startState, changeTaskStatusAC(taskId, TaskStatuses.New, todolistId1))
 
 
     expect(result[todolistId1].length).toBe(4)
-    expect(result[todolistId1][1].isDone).toBe(false)
+    expect(result[todolistId1][1].status).toBe(0)
 })
 
 test('new array should be added when new todolist is added', () => {
-    const startState: TasksForTodolistType = {
+
+    const startState: any = {
         ['todolistId1']: [
-            {id: '1', title: 'HTML&CSS', isDone: true},
-            {id: '2', title: 'CSS', isDone: true},
-            {id: '3', title: 'JS', isDone: false},
-            {id: '4', title: 'React', isDone: false},
+            {
+                id: v1(),
+                title: 'HTML&CSS',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: 'todolistId1'
+            },
+            {
+                id: v1(),
+                title: 'CSS',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: 'todolistId1'
+            },
+            {
+                id: v1(),
+                title: 'Js',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: 'todolistId1'
+            },
+            {
+                id: v1(),
+                title: 'Js',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: 'todolistId1'
+            },
         ],
         ['todolistId2']: [
-            {id: '1', title: 'Milk', isDone: true},
-            {id: '2', title: 'Salt', isDone: true},
-            {id: '3', title: 'Sugar', isDone: false},
+            {
+                id: v1(),
+                title: 'Milk',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: 'todolistId2'
+            },
+            {
+                id: v1(),
+                title: 'Salt',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: 'todolistId2'
+            },
+            {
+                id: v1(),
+                title: 'Sugar',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: 'todolistId2'
+            },
         ],
     }
-    const todolistId=v1()
-    const result = tasksReducer(startState, addTodolistAC('newTodolist',todolistId))
+    const todolistId = v1()
+    const result = tasksReducer(startState, addTodolistAC('newTodolist', todolistId))
     const keys = Object.keys(result)
     const newKey = keys.find(k => k !== 'todolistId1' && k !== 'todolistId2')
     if (!newKey) {
@@ -131,3 +518,67 @@ test('new array should be added when new todolist is added', () => {
 
 
 })
+
+test('empty array should be added when we set todolists', () => {
+
+    const action = setTodolistsAC([
+        {id: '1', title: "title 1", order: 0, addedDate: ''},
+    ])
+
+    const result = tasksReducer({}, action)
+
+    const keys = Object.keys(result)
+
+
+    expect(keys.length).toBe(2)
+    expect(result['1']).toBe([])
+    expect(result['2']).toBe([])
+
+
+})
+
+
+test('tasks should be added for todolist', () => {
+    const action = setTasksAC([{
+        id: v1(), title: 'Js', status: TaskStatuses.New,
+        startDate: '', addedDate: '', deadline: '',
+        order: 0, description: '', priority: 0, todoListId: 'todolistId1'
+    }], 'todolistId1')
+
+    const result = tasksReducer({
+        'todolistId2':[],
+        'todolistId1':[]
+    }, action)
+
+
+
+    expect(result['todolistId1'.length]).toBe(1)
+    expect(result['todolistId2'.length]).toBe(0)
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

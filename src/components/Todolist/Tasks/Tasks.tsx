@@ -1,14 +1,15 @@
 import React from 'react';
-import {TaskType} from "../../../App/App";
+// import {TaskType} from "../../../App/App";
 import {List} from "@mui/material";
 import {Task} from "./Task/Task";
+import {TaskStatuses, TaskType} from "../../../api/todolists-api";
 
 type TasksPropsType = {
     changeTaskTitle: (title: string, taskId: string, todolistId: string) => void
     todolistId: string
     tasks: TaskType[]
     removeTask: (id: string, todolistId: string) => void
-    changeTaskStatus: (taskId: string, isDone: boolean, todolistId: string) => void
+    changeTaskStatus: (taskId: string,status:TaskStatuses, todolistId: string) => void
 }
 export const Tasks = React.memo((props: TasksPropsType) => {
     return (

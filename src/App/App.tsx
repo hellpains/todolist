@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import '../App.css';
 import {Todolist} from "../components/Todolist/Todolist";
 import {AddItemForm} from "../components/AddItemForm/AddItemForm";
@@ -18,18 +18,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {Brightness4Outlined} from "@mui/icons-material";
 import {useApp} from "./hooks/useApp";
 import {useMods} from "./hooks/useMods";
+import {TaskType, todolistsAPI} from "../api/todolists-api";
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
-export type TodolistType = {
-    id: string
-    title: string
-    filter: FilterValuesType
-}
-export type TaskType = {
-    id: string
-    title: string
-    isDone: boolean
-}
+
+
+
+
 export type TasksForTodolistType = {
     [key: string]: TaskType[]
 }
@@ -41,6 +36,9 @@ export const App = React.memo(() => {
         tasks, addTask, removeTask, changeTaskTitle, changeTaskStatus
     } = useApp()
     const {theme, setDarkMode, lightMode} = useMods()
+
+
+
 
 
     return (

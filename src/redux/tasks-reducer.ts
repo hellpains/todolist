@@ -1,36 +1,32 @@
 import {TasksForTodolistType} from "../App/App";
 import {v1} from "uuid";
-import {AddTodolistAT, RemoveTodolistAT, TODOLISTS_ACTIONS_TYPE} from "./todolists-reducer";
-
-
-export const TASKS_ACTIONS_TYPE= {
-    ADD_TASK : 'ADD_TASK' as const,
-    REMOVE_TASK : "REMOVE_TASK" as const,
-    CHANGE_TASK_TITLE : 'CHANGE_TASK_TITLE' as const,
-    CHANGE_TASK_STATUS : 'CHANGE_TASK_STATUS' as const,
-}
+import {AddTodolistAT, RemoveTodolistAT, SetTodolistsAT,} from "./todolists-reducer";
+import {TaskStatuses, TaskType, todolistsAPI} from "../api/todolists-api";
+import {Dispatch} from "redux";
 
 
 const initialState: TasksForTodolistType = {}
-
-type ActionsType = AddTaskAT | RemoveTaskAT | ChangeTitleAT | ChangeStatusAT | AddTodolistAT | RemoveTodolistAT
 export const tasksReducer = (state: TasksForTodolistType = initialState, action: ActionsType): TasksForTodolistType => {
     switch (action.type) {
-        case TASKS_ACTIONS_TYPE.ADD_TASK: {     // add task
+        case 'ADD_TASK': {     // add task
             return {
                 ...state,
                 [action.payload.todolistId]: [
-                    {id: v1(), title: action.payload.title, isDone: false}, ...state[action.payload.todolistId]
+                    {
+                        id: v1(), title: action.payload.title, status: TaskStatuses.New,
+                        todoListId: action.payload.todolistId, priority: 0, order: 0, description: '',
+                        deadline: '', addedDate: '', startDate: ''
+                    }, ...state[action.payload.todolistId]
                 ]
             }
         }
-        case TASKS_ACTIONS_TYPE.REMOVE_TASK: {    // remove task
+        case 'REMOVE_TASK': {    // remove task
             return {
                 ...state,
                 [action.payload.todolistId]: state[action.payload.todolistId].filter(task => task.id !== action.payload.id)
             }
         }
-        case TASKS_ACTIONS_TYPE.CHANGE_TASK_TITLE: {       // change task title
+        case 'CHANGE_TASK_TITLE': {       // change task title
             return {
                 ...state, [action.payload.todolistId]:
                     state[action.payload.todolistId].map(t => t.id == action.payload.taskId
@@ -38,21 +34,32 @@ export const tasksReducer = (state: TasksForTodolistType = initialState, action:
                         : t)
             }
         }
-        case TASKS_ACTIONS_TYPE.CHANGE_TASK_STATUS: {       // change task status
+        case 'CHANGE_TASK_STATUS': {       // change task status
             return {
                 ...state,
                 [action.payload.todolistId]:
                     state[action.payload.todolistId].map(task => task.id === action.payload.taskId
-                        ? {...task, isDone: action.payload.isDone}
+                        ? {...task, status: action.payload.status}
                         : task)
             }
         }
-        case TODOLISTS_ACTIONS_TYPE.ADD_TODOLIST: {
+        case 'ADD_TODOLIST': {
             return {...state, [action.payload.todolistId]: []}
         }
-        case TODOLISTS_ACTIONS_TYPE.REMOVE_TODOLIST: {
+        case 'REMOVE_TODOLIST': {
             const {[action.payload.todolistId]: [], ...rest} = state
             return rest
+        }
+        case "SET_TODOLISTS": {
+            const copyState = {...state}
+            action.todolists.forEach(tl => copyState[tl.id] = [])
+            return copyState
+        }
+        case "SET_TASKS": {
+            return {
+                ...state,
+                [action.todolistId]: action.tasks
+            }
         }
         default:
             return state
@@ -62,7 +69,7 @@ export const tasksReducer = (state: TasksForTodolistType = initialState, action:
 export type AddTaskAT = ReturnType<typeof addTaskAC>
 export const addTaskAC = (title: string, todolistId: string) => {
     return {
-        type: TASKS_ACTIONS_TYPE.ADD_TASK,
+        type: 'ADD_TASK',
         payload: {
             title,
             todolistId
@@ -73,7 +80,7 @@ export const addTaskAC = (title: string, todolistId: string) => {
 export type RemoveTaskAT = ReturnType<typeof removeTaskAC>
 export const removeTaskAC = (id: string, todolistId: string) => {
     return {
-        type: TASKS_ACTIONS_TYPE.REMOVE_TASK,
+        type: 'REMOVE_TASK',
         payload: {
             id,
             todolistId
@@ -84,7 +91,7 @@ export const removeTaskAC = (id: string, todolistId: string) => {
 export type ChangeTitleAT = ReturnType<typeof changeTaskTitleAC>
 export const changeTaskTitleAC = (title: string, taskId: string, todolistId: string) => {
     return {
-        type: TASKS_ACTIONS_TYPE.CHANGE_TASK_TITLE,
+        type: 'CHANGE_TASK_TITLE',
         payload: {
             title,
             taskId,
@@ -94,13 +101,54 @@ export const changeTaskTitleAC = (title: string, taskId: string, todolistId: str
 }
 
 export type ChangeStatusAT = ReturnType<typeof changeTaskStatusAC>
-export const changeTaskStatusAC = (taskId: string, isDone: boolean, todolistId: string) => {
+export const changeTaskStatusAC = (taskId: string, status: TaskStatuses, todolistId: string) => {
     return {
-        type: TASKS_ACTIONS_TYPE.CHANGE_TASK_STATUS,
+        type: 'CHANGE_TASK_STATUS',
         payload: {
             taskId,
-            isDone,
+            status,
             todolistId
         }
     } as const
 }
+
+export const setTasksAC = (tasks:TaskType[],todolistId: string) => {
+    return {
+        type: "SET_TASKS", tasks,todolistId
+    }as const
+}
+
+
+// THUNK
+export const fetchTasksTC = (todolistId:string) => (dispatch: Dispatch) => {
+    todolistsAPI.getTasks(todolistId)
+        .then(res => {
+            dispatch(setTasksAC(res.data.items,todolistId))
+        })
+}
+
+
+
+
+
+
+
+
+
+
+
+export type SetTasksActionType = {
+    type: "SET_TASKS",
+    tasks: TaskType[]
+    todolistId: string
+}
+
+type ActionsType =
+    AddTaskAT
+    | RemoveTaskAT
+    | ChangeTitleAT
+    | ChangeStatusAT
+    | AddTodolistAT
+    | RemoveTodolistAT
+    | SetTodolistsAT
+    | SetTasksActionType

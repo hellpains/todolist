@@ -1,11 +1,12 @@
-import {TasksForTodolistType, TodolistType} from "../App/App";
-import {addTodolistAC, removeTodolistAC, todolistsReducer} from "./todolists-reducer";
+import {TasksForTodolistType} from "../App/App";
+import {addTodolistAC, removeTodolistAC, TodolistDomainType, todolistsReducer} from "./todolists-reducer";
 import {tasksReducer} from "./tasks-reducer";
 import {v1} from "uuid";
+import {TaskStatuses} from "../api/todolists-api";
 
 test('ids should be equals', () => {
     const startTasksState: TasksForTodolistType = {};
-    const startTodolistsState: Array<TodolistType> = [];
+    const startTodolistsState: Array<TodolistDomainType> = [];
     const todolistId=v1()
     const action = addTodolistAC("new todolist",todolistId);
 
@@ -23,17 +24,95 @@ test('ids should be equals', () => {
 
 test('property with todolistId should be deleted', () => {
     const startState: TasksForTodolistType = {
-        "todolistId1": [
-            { id: "1", title: "CSS", isDone: false },
-            { id: "2", title: "JS", isDone: true },
-            { id: "3", title: "React", isDone: false }
+        ['todolistId1']: [
+            {
+                id: v1(),
+                title: 'HTML&CSS',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: 'todolistId1'
+            },
+            {
+                id: v1(),
+                title: 'CSS',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: 'todolistId1'
+            },
+            {
+                id: v1(),
+                title: 'Js',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: 'todolistId1'
+            },
+            {
+                id: v1(),
+                title: 'Js',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: 'todolistId1'
+            },
         ],
-        "todolistId2": [
-            { id: "1", title: "bread", isDone: false },
-            { id: "2", title: "milk", isDone: true },
-            { id: "3", title: "tea", isDone: false }
-        ]
-    };
+        ['todolistId2']: [
+            {
+                id: v1(),
+                title: 'Milk',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: 'todolistId2'
+            },
+            {
+                id: v1(),
+                title: 'Salt',
+                status: TaskStatuses.Completed,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: 'todolistId2'
+            },
+            {
+                id: v1(),
+                title: 'Sugar',
+                status: TaskStatuses.New,
+                startDate: '',
+                addedDate: '',
+                deadline: '',
+                order: 0,
+                description: '',
+                priority: 0,
+                todoListId: 'todolistId2'
+            },
+        ],
+    }
 
     const action = removeTodolistAC("todolistId2");
 
