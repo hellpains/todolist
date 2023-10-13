@@ -1,8 +1,7 @@
 import React from 'react';
-// import {TaskType} from "../../../App/App";
 import {List} from "@mui/material";
 import {Task} from "./Task/Task";
-import {TaskStatuses, TaskType} from "../../../api/todolists-api";
+import {TaskStatuses, TaskType} from "../../../../api/todolists-api";
 
 type TasksPropsType = {
     changeTaskTitle: (title: string, taskId: string, todolistId: string) => void

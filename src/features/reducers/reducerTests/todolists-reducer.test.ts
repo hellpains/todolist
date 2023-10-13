@@ -6,7 +6,7 @@ import {
     changeTodolistTitleAC,
     removeTodolistAC, setTodolistsAC, TodolistDomainType,
     todolistsReducer
-} from "./todolists-reducer";
+} from "../todolists-reducer";
 
 
 beforeEach(()=>{

@@ -1,14 +1,13 @@
-import {FilterValuesType} from "../../App/App";
 import React, {useCallback, useEffect} from "react";
 import {Tasks} from "./Tasks/Tasks";
-import {AddItemForm} from "../AddItemForm/AddItemForm";
-import {EditableSpan} from "../EditableSpan/EditableSpan";
+import {AddItemForm} from "../../../components/AddItemForm/AddItemForm";
+import {EditableSpan} from "../../../components/EditableSpan/EditableSpan";
 import {Button, IconButton, Typography} from "@mui/material";
 import {DeleteForever} from "@mui/icons-material";
-import {TaskStatuses, TaskType} from "../../api/todolists-api";
-import {fetchTodolistsTC} from "../../redux/todolists-reducer";
-import {fetchTasksTC} from "../../redux/tasks-reducer";
-import {useAppDispatch} from "../../redux/store";
+import {TaskStatuses, TaskType} from "../../../api/todolists-api";
+import {fetchTasksTC} from "../../reducers/tasks-reducer";
+import {useAppDispatch} from "../../../App/hooks/useApp";
+import {FilterValuesType} from "../../reducers/todolists-reducer";
 
 
 type TodolistPropsType = {

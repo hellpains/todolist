@@ -1,23 +1,22 @@
-import {useSelector} from "react-redux";
-import {AppRootStateType, useAppDispatch} from "../../redux/store";
+import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
+import { DispatchType, RootState,} from "../store";
 import {useCallback, useEffect,} from "react";
 import {
     addTodolistTC,
     changeTodolistFilterAC,
     changeTodolistTitleTC,
-    fetchTodolistsTC,
+    fetchTodolistsTC, FilterValuesType,
     removeTodolistTC,
     TodolistDomainType,
-} from "../../redux/todolists-reducer";
-import {FilterValuesType, TasksForTodolistType,} from "../App";
-import {addTaskTC, removeTasksTC, updateTaskTC} from "../../redux/tasks-reducer";
+} from "../../features/reducers/todolists-reducer";
+import {addTaskTC, removeTasksTC, TasksForTodolistType, updateTaskTC} from "../../features/reducers/tasks-reducer";
 import {TaskStatuses} from "../../api/todolists-api";
 
 
 export const useApp = () => {
     const dispatch = useAppDispatch()
-    const todolists = useSelector<AppRootStateType, TodolistDomainType[]>(state => state.todolists)
-    const tasks = useSelector<AppRootStateType, TasksForTodolistType>(state => state.tasks)
+    const todolists = useAppSelector<TodolistDomainType[]>(state => state.todolists)
+    const tasks = useAppSelector<TasksForTodolistType>(state => state.tasks)
 
 
     useEffect(() => {
@@ -58,3 +57,6 @@ export const useApp = () => {
     }
 }
 
+
+export const useAppDispatch = () => useDispatch<DispatchType>()
+export const useAppSelector:TypedUseSelectorHook<RootState>=useSelector

@@ -1,7 +1,7 @@
 import axios from "axios";
-import {UpdateDomainTaskModelType} from "../redux/tasks-reducer";
+import {UpdateDomainTaskModelType} from "../features/reducers/tasks-reducer";
 
-
+// api
 export const todolistsAPI = {
     getTodolists() {
         return instance.get<TodolistType[]>('todo-lists/')
@@ -29,6 +29,7 @@ export const todolistsAPI = {
         return instance.put(`todo-lists/${todolistId}/tasks/${taskId}`, model)
     },
 }
+
 
 // TYPES
 export enum TaskStatuses {
