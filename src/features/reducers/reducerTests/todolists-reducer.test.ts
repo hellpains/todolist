@@ -1,20 +1,21 @@
 // import {TodolistType} from "../App/App";
 import {v1} from "uuid";
 import {
-    addTodolistAC,
+    addTodolistAC, changeTodolistEntityStatusAC,
     changeTodolistFilterAC,
     changeTodolistTitleAC,
     removeTodolistAC, setTodolistsAC, TodolistDomainType,
     todolistsReducer
 } from "../todolists-reducer";
+import {appReducer, setAppStatusAC} from "../../../App/app-reducer";
 
 
 beforeEach(()=>{
     let todolistId1 = v1()
     let todolistId2 = v1()
     const startState: TodolistDomainType[] = [
-        {id: todolistId1, title: "What to learn", filter: 'active',order:0,addedDate:''},
-        {id: todolistId2, title: "What to buy", filter: 'completed',order:0,addedDate:''},
+        {id: todolistId1, title: "What to learn", filter: 'active',entityStatus:'idle',order:0,addedDate:''},
+        {id: todolistId2, title: "What to buy", filter: 'completed',entityStatus:'idle',order:0,addedDate:''},
     ]
 })
 
@@ -22,8 +23,8 @@ test('should be removed correct todolists', () => {
     let todolistId1 = v1()
     let todolistId2 = v1()
     const startState: TodolistDomainType[] = [
-        {id: todolistId1, title: "What to learn", filter: 'active',order:0,addedDate:''},
-        {id: todolistId2, title: "What to buy", filter: 'completed',order:0,addedDate:''},
+        {id: todolistId1, title: "What to learn", filter: 'active',entityStatus:'idle',order:0,addedDate:''},
+        {id: todolistId2, title: "What to buy", filter: 'completed',entityStatus:'idle',order:0,addedDate:''},
     ]
     const result = todolistsReducer(startState, removeTodolistAC(todolistId1))
 
@@ -35,8 +36,8 @@ test('should be add correct todolists', () => {
     let todolistId1 = v1()
     let todolistId2 = v1()
     const startState: TodolistDomainType[] = [
-        {id: todolistId1, title: "What to learn", filter: 'active',order:0,addedDate:''},
-        {id: todolistId2, title: "What to buy", filter: 'completed',order:0,addedDate:''},
+        {id: todolistId1, title: "What to learn", filter: 'active',entityStatus:'idle',order:0,addedDate:''},
+        {id: todolistId2, title: "What to buy", filter: 'completed',entityStatus:'idle',order:0,addedDate:''},
     ]
     const todolistId=v1()
     const result = todolistsReducer(startState, addTodolistAC({
@@ -51,8 +52,8 @@ test('should be filtered correct todolists', () => {
     let todolistId1 = v1()
     let todolistId2 = v1()
     const startState: TodolistDomainType[] = [
-        {id: todolistId1, title: "What to learn", filter: 'active',order:0,addedDate:''},
-        {id: todolistId2, title: "What to buy", filter: 'completed',order:0,addedDate:''},
+        {id: todolistId1, title: "What to learn", filter: 'active',entityStatus:'idle',order:0,addedDate:''},
+        {id: todolistId2, title: "What to buy", filter: 'completed',entityStatus:'idle',order:0,addedDate:''},
     ]
     const result = todolistsReducer(startState, changeTodolistFilterAC('all',todolistId1))
 
@@ -63,8 +64,8 @@ test('should be changed title correct todolists', () => {
     let todolistId1 = v1()
     let todolistId2 = v1()
     const startState: TodolistDomainType[] = [
-        {id: todolistId1, title: "What to learn", filter: 'active',order:0,addedDate:''},
-        {id: todolistId2, title: "What to buy", filter: 'completed',order:0,addedDate:''},
+        {id: todolistId1, title: "What to learn", filter: 'active',entityStatus:'idle',order:0,addedDate:''},
+        {id: todolistId2, title: "What to buy", filter: 'completed',entityStatus:'idle',order:0,addedDate:''},
     ]
     const result = todolistsReducer(startState, changeTodolistTitleAC('hello',todolistId1))
 
@@ -75,8 +76,8 @@ test('todolsits should be set to the state', () => {
     let todolistId1 = v1()
     let todolistId2 = v1()
     const startState: TodolistDomainType[] = [
-        {id: todolistId1, title: "What to learn", filter: 'active',order:0,addedDate:''},
-        {id: todolistId2, title: "What to buy", filter: 'completed',order:0,addedDate:''},
+        {id: todolistId1, title: "What to learn", filter: 'active',entityStatus:'idle',order:0,addedDate:''},
+        {id: todolistId2, title: "What to buy", filter: 'completed',entityStatus:'idle',order:0,addedDate:''},
     ]
 
     const result = todolistsReducer([],setTodolistsAC(startState))
@@ -84,7 +85,20 @@ test('todolsits should be set to the state', () => {
     expect(result.length).toBe(2)
 })
 
+test('correct entity status of todolist should be changed', () => {
 
+
+
+    let todolistId1 = v1()
+    let todolistId2 = v1()
+    const startState: TodolistDomainType[] = [
+        {id: todolistId1, title: "What to learn", filter: 'active',entityStatus:'idle',order:0,addedDate:''},
+        {id: todolistId2, title: "What to buy", filter: 'completed',entityStatus:'idle',order:0,addedDate:''},
+    ]
+    const result = todolistsReducer(startState,changeTodolistEntityStatusAC(todolistId1,'loading') )
+
+    expect(result[0].entityStatus).toBe('loading')
+})
 
 
 

@@ -4,6 +4,7 @@ import {TextField} from "@mui/material";
 type EditableSpanPropsType = {
     title: string
     changeTitle: (title: string) => void
+    disabled?:boolean
 }
 export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
     const [editMode, setEditMode] = useState<boolean>(false)
@@ -23,6 +24,7 @@ export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
 
     return editMode
         ? <TextField
+            disabled={props.disabled}
             variant="standard"
             autoFocus
             onBlur={activateViewMode}

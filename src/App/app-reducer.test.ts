@@ -1,4 +1,4 @@
-import {appReducer, InitialStateType, setErrorAC, setStatusAC} from "./app-reducer";
+import {appReducer, InitialStateType, setAppErrorAC, setAppStatusAC} from "./app-reducer";
 import {v1} from "uuid";
 
 
@@ -12,7 +12,7 @@ beforeEach(() => {
 
 
 test('correct error message should be set', () => {
-    const result = appReducer(startState, setErrorAC('some error'))
+    const result = appReducer(startState, setAppErrorAC('some error'))
 
 
     expect(result.error).toBe('some error')
@@ -20,7 +20,7 @@ test('correct error message should be set', () => {
 })
 
 test('correct status  should be set', () => {
-    const result = appReducer(startState, setStatusAC('loading'))
+    const result = appReducer(startState, setAppStatusAC('loading'))
 
 
     expect(result.status).toBe('loading')

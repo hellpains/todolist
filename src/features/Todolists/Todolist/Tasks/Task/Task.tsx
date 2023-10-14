@@ -10,6 +10,7 @@ type TaskPropsType = {
     changeTaskTitle: (title: string, taskId: string, todolistId: string) => void
     todolistId: string
     task: TaskType
+    disabled:boolean
 }
 export const Task = React.memo((props: TaskPropsType) => {
     const onChangeTaskTitleHandler = useCallback((title: string) => {
@@ -30,11 +31,12 @@ export const Task = React.memo((props: TaskPropsType) => {
         <ListItem divider disablePadding key={props.task.id}
                   className={props.task.status===TaskStatuses.Completed ? 'is-done' : ''}>
             <Checkbox
+                disabled={props.disabled}
                 onChange={onChangeStatusHandler}
                 checked={props.task.status === TaskStatuses.Completed}
             />
             <EditableSpan title={props.task.title} changeTitle={onChangeTaskTitleHandler}/>
-            <IconButton onClick={onRemoveHandler}>
+            <IconButton disabled={props.disabled} onClick={onRemoveHandler}>
                 <DeleteForever/>
             </IconButton>
 

@@ -15,7 +15,7 @@ export const Todolists = (props: TodolistsPropsType) => {
     return (
         <>
             <Grid container sx={{p: '20px', justifyContent: 'center'}}>
-                <AddItemForm addItem={addTodolist}/>
+                <AddItemForm addItem={addTodolist} />
             </Grid>
             <Grid container spacing={5}>
                 {todolists.map((tl) => {
@@ -26,14 +26,12 @@ export const Todolists = (props: TodolistsPropsType) => {
                         <Grid item key={tl.id}>
                             <Paper elevation={3} sx={{p: '10px'}}>
                                 <Todolist
+                                    todolist={tl}
                                     changeTodolistTitle={changeTodolistTitle}
                                     changeTaskTitle={changeTaskTitle}
                                     removeTodolist={removeTodolist}
                                     key={tl.id}
-                                    todolistId={tl.id}
-                                    filter={tl.filter}
                                     changeTaskStatus={changeTaskStatus}
-                                    title={tl.title}
                                     tasks={tasksForTodolist}
                                     removeTask={removeTask}
                                     changeFilter={changeFilter}
