@@ -21,6 +21,7 @@ export const useApp = () => {
 
     useEffect(() => {
         dispatch(fetchTodolistsTC())
+
     }, []);
 
 
