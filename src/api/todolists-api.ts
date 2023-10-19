@@ -29,7 +29,17 @@ export const todolistsAPI = {
         return instance.put(`todo-lists/${todolistId}/tasks/${taskId}`, model)
     },
 }
-
+export const authAPI={
+    login(email:string,password:string,rememberMe:boolean){
+        return instance.post<ResponseType<{userId?:number}>>('auth/login',{email,password,rememberMe})
+    },
+    logout(){
+        return instance.delete<ResponseType<{userId?:number}>>('auth/login')
+    },
+    me(){
+        return instance.get<ResponseType<{id:number,email:string,login:string}>>('auth/me')
+    }
+}
 
 // TYPES
 export enum TaskStatuses {

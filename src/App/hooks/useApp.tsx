@@ -1,5 +1,5 @@
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
-import { DispatchType, RootState,} from "../store";
+import {DispatchType, RootState,} from "../store";
 import {useCallback, useEffect,} from "react";
 import {
     addTodolistTC,
@@ -11,19 +11,19 @@ import {
 } from "../../features/reducers/todolists-reducer";
 import {addTaskTC, removeTasksTC, TasksForTodolistType, updateTaskTC} from "../../features/reducers/tasks-reducer";
 import {TaskStatuses} from "../../api/todolists-api";
+import {initializeAppTC} from "../app-reducer";
 
 
 export const useApp = () => {
     const dispatch = useAppDispatch()
     const todolists = useAppSelector<TodolistDomainType[]>(state => state.todolists)
     const tasks = useAppSelector<TasksForTodolistType>(state => state.tasks)
-
-
+    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
     useEffect(() => {
-        dispatch(fetchTodolistsTC())
-
+        if(isLoggedIn){
+            dispatch(fetchTodolistsTC())
+        }
     }, []);
-
 
     const removeTodolist = useCallback((todolistId: string) => {
         dispatch(removeTodolistTC(todolistId))
@@ -60,4 +60,4 @@ export const useApp = () => {
 
 
 export const useAppDispatch = () => useDispatch<DispatchType>()
-export const useAppSelector:TypedUseSelectorHook<RootState>=useSelector
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector

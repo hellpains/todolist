@@ -2,20 +2,27 @@ import React from 'react';
 import {Grid, Paper} from "@mui/material";
 import {AddItemForm} from "../../components/AddItemForm/AddItemForm";
 import {Todolist} from "./Todolist/Todolist";
-import {useApp} from "../../App/hooks/useApp";
+import {useApp, useAppSelector} from "../../App/hooks/useApp";
+import {Navigate} from "react-router-dom";
 
 type TodolistsPropsType = {}
 export const Todolists = (props: TodolistsPropsType) => {
-
     const {
         todolists, addTodolist, removeTodolist, changeFilter, changeTodolistTitle,
         tasks, addTask, removeTask, changeTaskTitle, changeTaskStatus
     } = useApp()
 
+
+    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
+
+
+    if (!isLoggedIn) {
+        return <Navigate to={'/login'}/>
+    }
     return (
         <>
             <Grid container sx={{p: '20px', justifyContent: 'center'}}>
-                <AddItemForm addItem={addTodolist} />
+                <AddItemForm addItem={addTodolist}/>
             </Grid>
             <Grid container spacing={5}>
                 {todolists.map((tl) => {

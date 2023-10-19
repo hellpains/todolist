@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useCallback, useEffect} from 'react';
 import './App.css';
 import {
     AppBar,
-    Button,
+    Button, CircularProgress,
     Container,
     CssBaseline,
     IconButton, LinearProgress,
@@ -15,20 +15,36 @@ import {Brightness4Outlined} from "@mui/icons-material";
 import {useMods} from "./hooks/useMods";
 import {Todolists} from "../features/Todolists/Todolists";
 import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
-import {useAppSelector} from "./hooks/useApp";
-import {RequestStatusType} from "./app-reducer";
+import {useAppDispatch, useAppSelector} from "./hooks/useApp";
+import {initializeAppTC, RequestStatusType} from "./app-reducer";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {Login} from "../features/Login/Login";
+import {logoutTC} from "../features/Login/auth-reducer";
 
 
 export const App = React.memo(() => {
     const status = useAppSelector<RequestStatusType>(state => state.app.status)
     const {theme, setDarkMode, lightMode} = useMods()
+    const isInitialized = useAppSelector<boolean>(state => state.app.initialized)
+    const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
+    const dispatch = useAppDispatch()
 
+    useEffect(() => {
+        dispatch(initializeAppTC())
+    }, []);
+    const logoutHandler = useCallback(() => {
+        dispatch(logoutTC())
+    }, [isLoggedIn])
+
+    if (!isInitialized) {
+        return <div style={{position: 'absolute', top: '30%', textAlign: 'center', width: '100%'}}><CircularProgress/></div>
+    }
     return (
-        <div className={'App'}>
-            <ErrorSnackbar/>
-            <ThemeProvider theme={theme}>
-                <CssBaseline/>
-                <div className="App">
+        <BrowserRouter>
+            <div className={'App'}>
+                <ErrorSnackbar/>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline/>
                     <AppBar position="static">
                         <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
                             <IconButton edge="start" color="inherit" sx={{mr: 2}}>
@@ -46,19 +62,22 @@ export const App = React.memo(() => {
                                     {lightMode ? "Dark mode" : 'Light mode'}
 
                                 </Button>
-                                <Button variant={'outlined'} color={'inherit'}>
+                                {isLoggedIn && <Button onClick={logoutHandler} variant={'outlined'} color={'inherit'}>
                                     LogOut
-                                </Button>
+                                </Button>}
                             </div>
                         </Toolbar>
                         {status === 'loading' && <LinearProgress/>}
                     </AppBar>
                     <Container fixed>
-                        <Todolists/>
+                        <Routes>
+                            <Route path={'/todolist'} element={<Todolists/>}/>
+                            <Route path={'/login'} element={<Login/>}/>
+                        </Routes>
                     </Container>
-                </div>
-        </ThemeProvider>
-        </div>
+                </ThemeProvider>
+            </div>
+        </BrowserRouter>
     );
 })
 
