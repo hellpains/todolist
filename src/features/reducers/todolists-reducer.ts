@@ -3,6 +3,7 @@ import { AppThunk } from "App/store";
 import { appActions, RequestStatusType } from "App/app-reducer";
 import { handleServerNetworkError } from "utils/error-utils";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { clearTasksAndTodolists } from "common/actions/common.actions";
 
 const slice = createSlice({
   name: "todolists",
@@ -38,6 +39,11 @@ const slice = createSlice({
         entityStatus: "idle",
       }));
     },
+  },
+  extraReducers: builder => {
+    builder.addCase(clearTasksAndTodolists, (state, action) => {
+      return action.payload.todolists;
+    });
   },
 });
 export const todolistsReducer = slice.reducer;

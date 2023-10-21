@@ -3,6 +3,7 @@ import { authAPI } from "api/todolists-api";
 import { handleServerNetworkError } from "utils/error-utils";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { appActions } from "App/app-reducer";
+import { clearTasksAndTodolists } from "common/actions/common.actions";
 
 const slice = createSlice({
   name: "auth",
@@ -38,6 +39,7 @@ export const logoutTC = (): AppThunk => dispatch => {
     .then(res => {
       dispatch(authActions.setIsLoggedInAC({ value: false }));
       dispatch(appActions.setAppStatusAC({ status: "succeeded" }));
+      dispatch(clearTasksAndTodolists({ todolists: [], tasks: {} }));
     })
     .catch(error => {
       handleServerNetworkError(error, dispatch);
