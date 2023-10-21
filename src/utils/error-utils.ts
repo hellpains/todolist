@@ -1,18 +1,17 @@
-import {setAppErrorAC, setAppStatusAC} from "../App/app-reducer";
-import {DispatchType} from "../App/store";
-import {ResponseType} from '../api/todolists-api'
-
+import { DispatchType } from "App/store";
+import { ResponseType } from "api/todolists-api";
+import { appActions } from "App/app-reducer";
 
 export const handleServerAppError = <D>(data: ResponseType<D>, dispatch: DispatchType) => {
-    if (data.messages.length) {
-        dispatch(setAppErrorAC(data.messages[0]))
-    } else {
-        dispatch(setAppErrorAC('Some error occurred'))
-    }
-    dispatch(setAppStatusAC('failed'))
-}
+  if (data.messages.length) {
+    dispatch(appActions.setAppErrorAC({ error: data.messages[0] }));
+  } else {
+    dispatch(appActions.setAppErrorAC({ error: "Some error occurred" }));
+  }
+  dispatch(appActions.setAppStatusAC({ status: "failed" }));
+};
 
 export const handleServerNetworkError = (error: { message: string }, dispatch: DispatchType) => {
-    dispatch(setAppErrorAC(error.message ? error.message : 'Some error occurred'))
-    dispatch(setAppStatusAC('failed'))
-}
+  dispatch(appActions.setAppErrorAC({ error: error.message ? error.message : "Some error occurred" }));
+  dispatch(appActions.setAppStatusAC({ status: "failed" }));
+};
