@@ -1,9 +1,9 @@
-import { todolistsAPI, TodolistType } from "api/todolists-api";
 import { AppThunk } from "App/store";
 import { appActions, RequestStatusType } from "App/app-reducer";
-import { handleServerNetworkError } from "utils/error-utils";
+import { handleServerNetworkError } from "common/utils/handleServerNetworkError";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { clearTasksAndTodolists } from "common/actions/common.actions";
+import { todolistsAPI, TodolistType } from "../todolistsApi";
 
 const slice = createSlice({
   name: "todolists",
@@ -62,16 +62,6 @@ export const fetchTodolistsTC = (): AppThunk => dispatch => {
       handleServerNetworkError(error, dispatch);
     });
 };
-// export const fetchTodolistsTC = (): AppThunk => async dispatch => {
-//     dispatch(setAppStatusAC('loading'))
-//     try {
-//         const res = await todolistsAPI.getTodolists()
-//         dispatch(setTodolistsAC(res.data))
-//         dispatch(setAppStatusAC('succeeded'))
-//     } catch (error) {
-//             dispatch(setAppErrorAC(error.message))
-//     }
-// }
 
 export const removeTodolistTC =
   (todolistId: string): AppThunk =>
@@ -99,6 +89,7 @@ export const addTodolistTC =
         if (res.data.resultCode === 0) {
           dispatch(todolistsActions.addTodolistAC({ todolist: res.data.data.item }));
         } else {
+          handleServerNetworkError(res.data, dispatch);
           dispatch(appActions.setAppStatusAC({ status: "failed" }));
         }
       })
@@ -113,8 +104,12 @@ export const changeTodolistTitleTC =
     todolistsAPI
       .updateTodolist(todolistId, title)
       .then(res => {
-        dispatch(todolistsActions.changeTodolistTitleAC({ title, todolistId }));
-        dispatch(appActions.setAppStatusAC({ status: "succeeded" }));
+        if (res.data.resultCode === 0) {
+          dispatch(todolistsActions.changeTodolistTitleAC({ title, todolistId }));
+          dispatch(appActions.setAppStatusAC({ status: "succeeded" }));
+        } else {
+          dispatch(appActions.setAppStatusAC({ status: "failed" }));
+        }
       })
       .catch(error => {
         handleServerNetworkError(error, dispatch);

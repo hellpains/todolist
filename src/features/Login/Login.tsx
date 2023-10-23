@@ -8,16 +8,17 @@ import FormLabel from "@mui/material/FormLabel";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useFormik } from "formik";
-import { useAppDispatch, useAppSelector } from "../../App/hooks/useApp";
 import { loginTC } from "./auth-reducer";
 import { Navigate } from "react-router-dom";
+import { useAppDispatch } from "common/hooks/useDispatch";
+import { useAppSelector } from "../../common/hooks/useAppSelector";
 
 export const Login = () => {
   const dispatch = useAppDispatch();
-  const isLoggedIn = useAppSelector<boolean>((state) => state.auth.isLoggedIn);
+  const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn);
 
   const formik = useFormik({
-    validate: (values) => {
+    validate: values => {
       if (!values.email) {
         return {
           email: "Email id required",
@@ -34,7 +35,7 @@ export const Login = () => {
       password: "",
       rememberMe: false,
     },
-    onSubmit: (values) => {
+    onSubmit: values => {
       dispatch(loginTC(values.email, values.password, values.rememberMe));
     },
   });

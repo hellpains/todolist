@@ -14,20 +14,21 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Brightness4Outlined } from "@mui/icons-material";
-import { useMods } from "./hooks/useMods";
+import { useMods } from "../common/hooks/useMods";
 import { Todolists } from "../features/Todolists/Todolists";
-import { ErrorSnackbar } from "../components/ErrorSnackbar/ErrorSnackbar";
-import { useAppDispatch, useAppSelector } from "./hooks/useApp";
+import { ErrorSnackbar } from "../common/components/ErrorSnackbar/ErrorSnackbar";
 import { initializeAppTC, RequestStatusType } from "./app-reducer";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Login } from "../features/Login/Login";
 import { logoutTC } from "../features/Login/auth-reducer";
+import { useAppSelector } from "../common/hooks/useAppSelector";
+import { useAppDispatch } from "../common/hooks/useDispatch";
 
 export const App = React.memo(() => {
-  const status = useAppSelector<RequestStatusType>((state) => state.app.status);
+  const status = useAppSelector<RequestStatusType>(state => state.app.status);
   const { theme, setDarkMode, lightMode } = useMods();
-  const isInitialized = useAppSelector<boolean>((state) => state.app.initialized);
-  const isLoggedIn = useAppSelector<boolean>((state) => state.auth.isLoggedIn);
+  const isInitialized = useAppSelector<boolean>(state => state.app.initialized);
+  const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -77,7 +78,7 @@ export const App = React.memo(() => {
           </AppBar>
           <Container fixed>
             <Routes>
-              <Route path={"/"} element={<Todolists />} />
+              <Route path={"/*"} element={<Todolists />} />
               <Route path={"/login"} element={<Login />} />
             </Routes>
           </Container>

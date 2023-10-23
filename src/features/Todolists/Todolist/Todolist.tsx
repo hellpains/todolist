@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect } from "react";
 import { Tasks } from "./Tasks/Tasks";
-import { AddItemForm } from "components/AddItemForm/AddItemForm";
-import { EditableSpan } from "components/EditableSpan/EditableSpan";
+import { AddItemForm } from "common/components/AddItemForm/AddItemForm";
+import { EditableSpan } from "common/components/EditableSpan/EditableSpan";
 import { Button, IconButton, Typography } from "@mui/material";
 import { DeleteForever } from "@mui/icons-material";
-import { TaskStatuses, TaskType } from "api/todolists-api";
-import { fetchTasksTC } from "../../reducers/tasks-reducer";
-import { useAppDispatch } from "App/hooks/useApp";
-import { FilterValuesType, TodolistDomainType } from "../../reducers/todolists-reducer";
+import { tasksThunks } from "features/Todolists/reducers/tasks-reducer";
+import { FilterValuesType, TodolistDomainType } from "features/Todolists/reducers/todolists-reducer";
+import { useAppDispatch } from "common/hooks/useDispatch";
+import { TaskStatuses } from "common/enum/enum";
+import { TaskType } from "features/Todolists/todolistsApi";
 
 type TodolistPropsType = {
   todolist: TodolistDomainType;
@@ -24,7 +25,7 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchTasksTC(props.todolist.id));
+    dispatch(tasksThunks.fetchTasks(props.todolist.id));
   }, []);
 
   const removeTodolist = () => {

@@ -1,5 +1,3 @@
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { DispatchType, RootState } from "../store";
 import { useCallback, useEffect } from "react";
 import {
   addTodolistTC,
@@ -9,10 +7,11 @@ import {
   removeTodolistTC,
   TodolistDomainType,
   todolistsActions,
-} from "features/reducers/todolists-reducer";
-import { addTaskTC, removeTasksTC, TasksForTodolistType, updateTaskTC } from "features/reducers/tasks-reducer";
-import { TaskStatuses } from "api/todolists-api";
-import { initializeAppTC } from "../app-reducer";
+} from "features/Todolists/reducers/todolists-reducer";
+import { TasksForTodolistType, tasksThunks } from "features/Todolists/reducers/tasks-reducer";
+import { useAppDispatch } from "./useDispatch";
+import { useAppSelector } from "./useAppSelector";
+import { TaskStatuses } from "common/enum/enum";
 
 export const useApp = () => {
   const dispatch = useAppDispatch();
@@ -51,25 +50,25 @@ export const useApp = () => {
   );
   const removeTask = useCallback(
     (taskId: string, todolistId: string) => {
-      dispatch(removeTasksTC(todolistId, taskId));
+      dispatch(tasksThunks.removeTask({ todolistId, taskId }));
     },
     [dispatch],
   );
   const addTask = useCallback(
     (title: string, todolistId: string) => {
-      dispatch(addTaskTC(todolistId, title));
+      dispatch(tasksThunks.addTask({ todolistId, title }));
     },
     [dispatch],
   );
   const changeTaskStatus = useCallback(
     (taskId: string, status: TaskStatuses, todolistId: string) => {
-      dispatch(updateTaskTC(todolistId, taskId, { status }));
+      dispatch(tasksThunks.updateTask({ todolistId, taskId, model: { status } }));
     },
     [dispatch],
   );
   const changeTaskTitle = useCallback(
     (title: string, taskId: string, todolistId: string) => {
-      dispatch(updateTaskTC(todolistId, taskId, { title }));
+      dispatch(tasksThunks.updateTask({ todolistId, taskId, model: { title } }));
     },
     [dispatch],
   );
@@ -87,6 +86,3 @@ export const useApp = () => {
     changeTaskTitle,
   };
 };
-
-export const useAppDispatch = () => useDispatch<DispatchType>();
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

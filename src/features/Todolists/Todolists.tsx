@@ -1,9 +1,10 @@
 import React from "react";
 import { Grid, Paper } from "@mui/material";
-import { AddItemForm } from "components/AddItemForm/AddItemForm";
+import { AddItemForm } from "common/components/AddItemForm/AddItemForm";
 import { Todolist } from "./Todolist/Todolist";
-import { useApp, useAppSelector } from "App/hooks/useApp";
 import { Navigate } from "react-router-dom";
+import { useApp } from "../../common/hooks/useApp";
+import { useAppSelector } from "../../common/hooks/useAppSelector";
 
 type TodolistsPropsType = {};
 export const Todolists = (props: TodolistsPropsType) => {

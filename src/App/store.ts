@@ -1,6 +1,6 @@
 import { AnyAction, combineReducers } from "redux";
-import { tasksReducer } from "features/reducers/tasks-reducer";
-import { todolistsReducer } from "features/reducers/todolists-reducer";
+import { tasksReducer } from "features/Todolists/reducers/tasks-reducer";
+import { todolistsReducer } from "features/Todolists/reducers/todolists-reducer";
 import thunk, { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { appReducer } from "./app-reducer";
 import { authReducer } from "features/Login/auth-reducer";

@@ -1,7 +1,8 @@
 import React from "react";
 import { List } from "@mui/material";
 import { Task } from "./Task/Task";
-import { TaskStatuses, TaskType } from "../../../../api/todolists-api";
+import { TaskStatuses } from "common/enum/enum";
+import { TaskType } from "features/Todolists/todolistsApi";
 
 type TasksPropsType = {
   disabled: boolean;
@@ -14,7 +15,7 @@ type TasksPropsType = {
 export const Tasks = React.memo((props: TasksPropsType) => {
   return (
     <List>
-      {props.tasks.map((task) => {
+      {props.tasks.map(task => {
         return (
           <Task
             disabled={props.disabled}

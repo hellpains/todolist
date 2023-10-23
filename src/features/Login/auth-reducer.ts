@@ -1,9 +1,9 @@
 import { AppThunk } from "App/store";
-import { authAPI } from "api/todolists-api";
-import { handleServerNetworkError } from "utils/error-utils";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { appActions } from "App/app-reducer";
 import { clearTasksAndTodolists } from "common/actions/common.actions";
+import { authAPI } from "./authApi";
+import { handleServerNetworkError } from "common/utils/handleServerNetworkError";
 
 const slice = createSlice({
   name: "auth",

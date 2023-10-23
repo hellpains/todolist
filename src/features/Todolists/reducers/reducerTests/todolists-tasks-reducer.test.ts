@@ -1,34 +1,11 @@
 import { TodolistDomainType, todolistsActions, todolistsReducer } from "../todolists-reducer";
 import { TasksForTodolistType, tasksReducer } from "../tasks-reducer";
 import { v1 } from "uuid";
-import { TaskStatuses } from "api/todolists-api";
+import { TaskStatuses } from "common/enum/enum";
 
-test("ids should be equals", () => {
-  const startTasksState: TasksForTodolistType = {};
-  const startTodolistsState: Array<TodolistDomainType> = [];
-  const todolistId = v1();
-  const action = todolistsActions.addTodolistAC({
-    todolist: {
-      id: todolistId,
-      title: "hello",
-      addedDate: "",
-      order: 0,
-    },
-  });
-
-  const endTasksState = tasksReducer(startTasksState, action);
-  const endTodolistsState = todolistsReducer(startTodolistsState, action);
-
-  const keys = Object.keys(endTasksState);
-  const idFromTasks = keys[0];
-  const idFromTodolists = endTodolistsState[0].id;
-
-  expect(idFromTasks).toBe(action.payload.todolist.id);
-  expect(idFromTodolists).toBe(action.payload.todolist.id);
-});
-
-test("property with todolistId should be deleted", () => {
-  const startState: TasksForTodolistType = {
+let startState: TasksForTodolistType = {};
+beforeEach(() => {
+  startState = {
     ["todolistId1"]: [
       {
         id: v1(),
@@ -118,7 +95,32 @@ test("property with todolistId should be deleted", () => {
       },
     ],
   };
+});
 
+test("ids should be equals", () => {
+  const startTasksState: TasksForTodolistType = {};
+  const startTodolistsState: Array<TodolistDomainType> = [];
+  const action = todolistsActions.addTodolistAC({
+    todolist: {
+      id: "todolistId1",
+      title: "hello",
+      addedDate: "",
+      order: 0,
+    },
+  });
+
+  const endTasksState = tasksReducer(startTasksState, action);
+  const endTodolistsState = todolistsReducer(startTodolistsState, action);
+
+  const keys = Object.keys(endTasksState);
+  const idFromTasks = keys[0];
+  const idFromTodolists = endTodolistsState[0].id;
+
+  expect(idFromTasks).toBe(action.payload.todolist.id);
+  expect(idFromTodolists).toBe(action.payload.todolist.id);
+});
+
+test("property with todolistId should be deleted", () => {
   const action = todolistsActions.removeTodolistAC({ todolistId: "todolistId2" });
 
   const endState = tasksReducer(startState, action);
