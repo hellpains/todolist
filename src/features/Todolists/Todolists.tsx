@@ -3,25 +3,26 @@ import { Grid, Paper } from "@mui/material";
 import { AddItemForm } from "common/components/AddItemForm/AddItemForm";
 import { Todolist } from "./Todolist/Todolist";
 import { Navigate } from "react-router-dom";
-import { useApp } from "../../common/hooks/useApp";
-import { useAppSelector } from "../../common/hooks/useAppSelector";
+import { useApp } from "common/hooks/useApp";
+import { useSelector } from "react-redux";
+import { selectIsLoggedIn } from "features/Auth/selectors";
 
 type TodolistsPropsType = {};
 export const Todolists = (props: TodolistsPropsType) => {
   const {
     todolists,
-    addTodolist,
-    removeTodolist,
-    changeFilter,
-    changeTodolistTitle,
+    addTodolistHandler,
+    removeTodolistHandler,
+    changeFilterHandler,
+    changeTodolistTitleHandler,
     tasks,
-    addTask,
-    removeTask,
-    changeTaskTitle,
-    changeTaskStatus,
+    addTaskHandler,
+    removeTaskHandler,
+    changeTaskTitleHandler,
+    changeTaskStatusHandler,
   } = useApp();
 
-  const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   if (!isLoggedIn) {
     return <Navigate to={"/login"} />;
@@ -29,10 +30,10 @@ export const Todolists = (props: TodolistsPropsType) => {
   return (
     <>
       <Grid container sx={{ p: "20px", justifyContent: "center" }}>
-        <AddItemForm addItem={addTodolist} />
+        <AddItemForm addItem={addTodolistHandler} />
       </Grid>
       <Grid container spacing={5}>
-        {todolists.map(tl => {
+        {todolists.map((tl) => {
           let allTodolistTasks = tasks[tl.id];
           let tasksForTodolist = allTodolistTasks;
 
@@ -41,15 +42,15 @@ export const Todolists = (props: TodolistsPropsType) => {
               <Paper elevation={3} sx={{ p: "10px" }}>
                 <Todolist
                   todolist={tl}
-                  changeTodolistTitle={changeTodolistTitle}
-                  changeTaskTitle={changeTaskTitle}
-                  removeTodolist={removeTodolist}
+                  changeTodolistTitle={changeTodolistTitleHandler}
+                  changeTaskTitle={changeTaskTitleHandler}
+                  removeTodolist={removeTodolistHandler}
                   key={tl.id}
-                  changeTaskStatus={changeTaskStatus}
+                  changeTaskStatus={changeTaskStatusHandler}
                   tasks={tasksForTodolist}
-                  removeTask={removeTask}
-                  changeFilter={changeFilter}
-                  addTask={addTask}
+                  removeTask={removeTaskHandler}
+                  changeFilter={changeFilterHandler}
+                  addTask={addTaskHandler}
                 />
               </Paper>
             </Grid>

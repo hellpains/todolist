@@ -75,7 +75,6 @@
     "gh-pages": "^3.2.3",
     "jest-image-snapshot": "^4.5.1",
     "jest-puppeteer": "^6.1.0",
-    "prettier": "3.0.3",
     "puppeteer": "^14.1.0",
     "start-server-and-test": "^1.14.0",
     "webpack": "^5.72.1"

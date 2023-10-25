@@ -1,88 +1,105 @@
 import { useCallback, useEffect } from "react";
 import {
-  addTodolistTC,
-  changeTodolistTitleTC,
-  fetchTodolistsTC,
   FilterValuesType,
-  removeTodolistTC,
   TodolistDomainType,
   todolistsActions,
 } from "features/Todolists/reducers/todolists-reducer";
-import { TasksForTodolistType, tasksThunks } from "features/Todolists/reducers/tasks-reducer";
+import { TasksForTodolistType } from "features/Todolists/reducers/tasks-reducer";
 import { useAppDispatch } from "./useDispatch";
 import { useAppSelector } from "./useAppSelector";
 import { TaskStatuses } from "common/enum/enum";
+import { todolistsThunks } from "features/Todolists/reducers/todolists-actions";
+import { tasksThunks } from "features/Todolists/reducers/tasks-actions";
+import { useActions } from "./useActions";
 
 export const useApp = () => {
   const dispatch = useAppDispatch();
-  const todolists = useAppSelector<TodolistDomainType[]>(state => state.todolists);
-  const tasks = useAppSelector<TasksForTodolistType>(state => state.tasks);
-  const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn);
+  const todolists = useAppSelector<TodolistDomainType[]>(
+    (state) => state.todolists
+  );
+  const tasks = useAppSelector<TasksForTodolistType>((state) => state.tasks);
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const { removeTask, addTask, updateTask, fetchTasks } =
+    useActions(tasksThunks);
+  const { changeTodolistTitle, removeTodolist, fetchTodolists, addTodolist } =
+    useActions(todolistsThunks);
   useEffect(() => {
     if (isLoggedIn) {
-      dispatch(fetchTodolistsTC());
+      // dispatch(todolistsThunks.fetchTodolists());
+      fetchTodolists();
     }
   }, []);
 
-  const removeTodolist = useCallback(
+  const removeTodolistHandler = useCallback(
     (todolistId: string) => {
-      dispatch(removeTodolistTC(todolistId));
+      // dispatch(todolistsThunks.removeTodolist(todolistId));
+      removeTodolist(todolistId);
     },
-    [dispatch],
+    [dispatch]
   );
-  const addTodolist = useCallback(
+  const addTodolistHandler = useCallback(
     (title: string) => {
-      dispatch(addTodolistTC(title));
+      // dispatch(todolistsThunks.addTodolist(title));
+      addTodolist(title);
     },
-    [dispatch],
+    [dispatch]
   );
-  const changeTodolistTitle = useCallback(
+  const changeTodolistTitleHandler = useCallback(
     (title: string, todolistId: string) => {
-      dispatch(changeTodolistTitleTC(title, todolistId));
+      // dispatch(todolistsThunks.changeTodolistTitle({ title, todolistId }));
+      changeTodolistTitle({ title, todolistId });
     },
-    [dispatch],
+    [dispatch]
   );
-  const changeFilter = useCallback(
+  const changeFilterHandler = useCallback(
     (value: FilterValuesType, todolistId: string) => {
       dispatch(todolistsActions.changeTodolistFilterAC({ value, todolistId }));
     },
-    [dispatch],
+    [dispatch]
   );
-  const removeTask = useCallback(
+  const removeTaskHandler = useCallback(
     (taskId: string, todolistId: string) => {
-      dispatch(tasksThunks.removeTask({ todolistId, taskId }));
+      // dispatch(tasksThunks.removeTask({ todolistId, taskId }));
+      removeTask({ todolistId, taskId });
     },
-    [dispatch],
+    [dispatch]
   );
-  const addTask = useCallback(
+  const addTaskHandler = useCallback(
     (title: string, todolistId: string) => {
-      dispatch(tasksThunks.addTask({ todolistId, title }));
+      // dispatch(tasksThunks.addTask({ todolistId, title }));
+      addTask({ todolistId, title });
     },
-    [dispatch],
+    [dispatch]
   );
-  const changeTaskStatus = useCallback(
+  const changeTaskStatusHandler = useCallback(
     (taskId: string, status: TaskStatuses, todolistId: string) => {
-      dispatch(tasksThunks.updateTask({ todolistId, taskId, model: { status } }));
+      // dispatch(
+      //   tasksThunks.updateTask({ todolistId, taskId, model: { status } })
+      // );
+      updateTask({ todolistId, taskId, model: { status } });
     },
-    [dispatch],
+    [dispatch]
   );
-  const changeTaskTitle = useCallback(
+  const changeTaskTitleHandler = useCallback(
     (title: string, taskId: string, todolistId: string) => {
-      dispatch(tasksThunks.updateTask({ todolistId, taskId, model: { title } }));
+      // dispatch(
+      //   tasksThunks.updateTask({ todolistId, taskId, model: { title } })
+      // );
+      updateTask({ todolistId, taskId, model: { title } });
     },
-    [dispatch],
+    [dispatch]
   );
 
   return {
     todolists,
     tasks,
-    addTodolist,
-    removeTodolist,
-    changeFilter,
-    changeTodolistTitle,
-    addTask,
-    removeTask,
-    changeTaskStatus,
-    changeTaskTitle,
+    addTodolistHandler,
+    removeTodolistHandler,
+    changeFilterHandler,
+    changeTodolistTitleHandler,
+    addTaskHandler,
+    removeTaskHandler,
+    changeTaskStatusHandler,
+    changeTaskTitleHandler,
   };
 };

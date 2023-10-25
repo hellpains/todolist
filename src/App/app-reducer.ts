@@ -1,7 +1,4 @@
-import { AppThunk } from "./store";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { authActions } from "features/Login/auth-reducer";
-import { authAPI } from "features/Login/authApi";
 
 const slice = createSlice({
   name: "app",
@@ -23,20 +20,7 @@ const slice = createSlice({
   },
 });
 
-export const initializeAppTC = (): AppThunk => dispatch => {
-  dispatch(appActions.setAppStatusAC({ status: "loading" }));
-  authAPI.me().then(res => {
-    if (res.data.resultCode === 0) {
-      dispatch(authActions.setIsLoggedInAC({ value: true }));
-    } else {
-    }
-    dispatch(appActions.setAppInitializedAC({ initialized: true }));
-    dispatch(appActions.setAppStatusAC({ status: "succeeded" }));
-  });
-};
-
 //types
 export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed";
-export type InitialStateType = ReturnType<typeof slice.getInitialState>;
 export const appReducer = slice.reducer;
 export const appActions = slice.actions;

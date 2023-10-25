@@ -4,11 +4,14 @@ import { AddItemForm } from "common/components/AddItemForm/AddItemForm";
 import { EditableSpan } from "common/components/EditableSpan/EditableSpan";
 import { Button, IconButton, Typography } from "@mui/material";
 import { DeleteForever } from "@mui/icons-material";
-import { tasksThunks } from "features/Todolists/reducers/tasks-reducer";
-import { FilterValuesType, TodolistDomainType } from "features/Todolists/reducers/todolists-reducer";
+import {
+  FilterValuesType,
+  TodolistDomainType,
+} from "features/Todolists/reducers/todolists-reducer";
 import { useAppDispatch } from "common/hooks/useDispatch";
 import { TaskStatuses } from "common/enum/enum";
 import { TaskType } from "features/Todolists/todolistsApi";
+import { tasksThunks } from "../reducers/tasks-actions";
 
 type TodolistPropsType = {
   todolist: TodolistDomainType;
@@ -18,7 +21,11 @@ type TodolistPropsType = {
   removeTask: (id: string, todolistId: string) => void;
   changeFilter: (value: FilterValuesType, todolistId: string) => void;
   addTask: (title: string, todolistId: string) => void;
-  changeTaskStatus: (taskId: string, status: TaskStatuses, todolistId: string) => void;
+  changeTaskStatus: (
+    taskId: string,
+    status: TaskStatuses,
+    todolistId: string
+  ) => void;
   removeTodolist: (todolistId: string) => void;
 };
 export const Todolist = React.memo((props: TodolistPropsType) => {
@@ -35,7 +42,7 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
     (title: string) => {
       props.addTask(title, props.todolist.id);
     },
-    [props.addTask, props.todolist.id],
+    [props.addTask, props.todolist.id]
   );
   const onAllClickHandler = useCallback(() => {
     props.changeFilter("all", props.todolist.id);
@@ -50,27 +57,47 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
     (title: string) => {
       props.changeTodolistTitle(title, props.todolist.id);
     },
-    [props.todolist.id, props.changeTodolistTitle],
+    [props.todolist.id, props.changeTodolistTitle]
   );
 
   let tasksForTodolist = props.tasks;
   if (props.todolist.filter === "completed") {
-    tasksForTodolist = props.tasks.filter(task => task.status === TaskStatuses.Completed);
+    tasksForTodolist = props.tasks.filter(
+      (task) => task.status === TaskStatuses.Completed
+    );
   }
   if (props.todolist.filter === "active") {
-    tasksForTodolist = props.tasks.filter(task => task.status === TaskStatuses.New);
+    tasksForTodolist = props.tasks.filter(
+      (task) => task.status === TaskStatuses.New
+    );
   }
 
   const disabled = props.todolist.entityStatus === "loading";
   return (
     <div>
-      <Typography aria-disabled={disabled} variant={"h5"} align={"center"} gutterBottom sx={{ fontWeight: "bold" }}>
-        <EditableSpan disabled={disabled} title={props.todolist.title} changeTitle={changeTodolistTitleHandler} />
-        <IconButton onClick={removeTodolist} disabled={props.todolist.entityStatus === "loading"}>
+      <Typography
+        aria-disabled={disabled}
+        variant={"h5"}
+        align={"center"}
+        gutterBottom
+        sx={{ fontWeight: "bold" }}
+      >
+        <EditableSpan
+          disabled={disabled}
+          title={props.todolist.title}
+          changeTitle={changeTodolistTitleHandler}
+        />
+        <IconButton
+          onClick={removeTodolist}
+          disabled={props.todolist.entityStatus === "loading"}
+        >
           <DeleteForever />
         </IconButton>
       </Typography>
-      <AddItemForm addItem={addTask} disabled={props.todolist.entityStatus === "loading"} />
+      <AddItemForm
+        addItem={addTask}
+        disabled={props.todolist.entityStatus === "loading"}
+      />
       <Tasks
         disabled={disabled}
         changeTaskTitle={props.changeTaskTitle}
@@ -95,7 +122,9 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
           sx={{ flexGrow: 1 }}
           size={"small"}
           color={props.todolist.filter === "active" ? "secondary" : "error"}
-          variant={props.todolist.filter === "active" ? "contained" : "outlined"}
+          variant={
+            props.todolist.filter === "active" ? "contained" : "outlined"
+          }
           onClick={onActiveClickHandler}
         >
           Active
@@ -104,8 +133,12 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
           disabled={disabled}
           sx={{ marginLeft: "5px", flexGrow: 1 }}
           size={"small"}
-          color={props.todolist.filter === "completed" ? "secondary" : "success"}
-          variant={props.todolist.filter === "completed" ? "contained" : "outlined"}
+          color={
+            props.todolist.filter === "completed" ? "secondary" : "success"
+          }
+          variant={
+            props.todolist.filter === "completed" ? "contained" : "outlined"
+          }
           onClick={onCompletedClickHandler}
         >
           Completed

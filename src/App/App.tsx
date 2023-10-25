@@ -14,28 +14,30 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Brightness4Outlined } from "@mui/icons-material";
-import { useMods } from "../common/hooks/useMods";
-import { Todolists } from "../features/Todolists/Todolists";
-import { ErrorSnackbar } from "../common/components/ErrorSnackbar/ErrorSnackbar";
-import { initializeAppTC, RequestStatusType } from "./app-reducer";
+import { useMods } from "common/hooks/useMods";
+import { Todolists } from "features/Todolists/Todolists";
+import { ErrorSnackbar } from "common/components/ErrorSnackbar/ErrorSnackbar";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Login } from "../features/Login/Login";
-import { logoutTC } from "../features/Login/auth-reducer";
-import { useAppSelector } from "../common/hooks/useAppSelector";
-import { useAppDispatch } from "../common/hooks/useDispatch";
+import { Login } from "features/Auth/Login";
+import { authThunks } from "features/Auth/auth-reducer";
+import { useActions } from "common/hooks/useActions";
+import { useSelector } from "react-redux";
+import { selectIsInitialized, selectStatus } from "./selectors";
+import { selectIsLoggedIn } from "features/Auth/selectors";
 
 export const App = React.memo(() => {
-  const status = useAppSelector<RequestStatusType>(state => state.app.status);
+  const status = useSelector(selectStatus);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const isInitialized = useSelector(selectIsInitialized);
   const { theme, setDarkMode, lightMode } = useMods();
-  const isInitialized = useAppSelector<boolean>(state => state.app.initialized);
-  const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn);
-  const dispatch = useAppDispatch();
+  const { logout, initializeApp } = useActions(authThunks);
 
   useEffect(() => {
-    dispatch(initializeAppTC());
+    initializeApp();
   }, []);
+
   const logoutHandler = useCallback(() => {
-    dispatch(logoutTC());
+    logout();
   }, [isLoggedIn]);
 
   if (!isInitialized) {
